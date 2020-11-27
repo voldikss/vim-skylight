@@ -43,3 +43,13 @@ function! skylight#util#show_msg(message, ...) abort
     call s:echon('Error', message)
   endif
 endfunction
+
+function! skylight#util#show_err(...) abort
+  if exists('g:skylight_errmsg') && !empty(g:skylight_errmsg)
+    call skylight#util#show_msg(g:skylight_errmsg, 'error')
+  else
+    let message = get(a:, 1, '')
+    call skylight#util#show_msg(message, 'error')
+  endif
+  let g:skylight_errmsg = ''
+endfunction

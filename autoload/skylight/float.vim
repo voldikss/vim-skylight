@@ -4,7 +4,7 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! s:get_float_pos(width, height, pos) abort
+function! s:calculate_float_pos(width, height, pos) abort
   if a:pos == 'topright'
     let row = 1
     let col = &columns
@@ -49,7 +49,6 @@ function! s:get_float_pos(width, height, pos) abort
     endif
   else " at the cursor place
     let winpos = win_screenpos(0)
-    " `- 1`: subtract the coordination of the window itself
     let row = winpos[0] - 1 + winline()
     let col = winpos[1] - 1 + wincol()
     if row + a:height <= &lines - &cmdheight - 1
@@ -74,34 +73,118 @@ function! s:get_float_pos(width, height, pos) abort
   return [row, col, anchor]
 endfunction
 
-function! skylight#float#open(bufnr, width, height, pos, title) abort
-  let [row, col, anchor] = s:get_float_pos(a:width, a:height, a:pos)
+function! s:win_exists(winid) abort
+  return !empty(getwininfo(a:winid))
+endfunction
+
+function! s:nvim_win_execute(winid, command) abort
+  let curr = nvim_get_current_win()
+  noa keepalt call nvim_set_current_win(a:winid)
+  exec a:command
+  noa keepalt call nvim_set_current_win(curr)
+endfunction
+
+function! s:register_autocmd(...) abort
+  augroup close_skylight_float
+    autocmd!
+    autocmd CursorMoved * call timer_start(100, function('s:close_float_win'))
+  augroup END
+endfunction
+
+function! s:close_float_win(...) abort
+  if win_getid() == s:winid | return | endif
+  call skylight#buffer#clear_highlight()
+  if s:win_exists(s:winid)
+    call nvim_win_close(s:winid, v:true)
+    let s:winid = -1
+  endif
+  if s:win_exists(s:border_winid)
+    call nvim_win_close(s:border_winid, v:true)
+    let s:border_winid = -1
+  endif
+  autocmd! close_skylight_float
+endfunction
+
+function! skylight#float#locate(winid, lnum, cmd) abort
+  noautocmd call win_gotoid(a:winid)
+  execute 'doautocmd filetypedetect BufNewFile'
+  if a:lnum > -1 || !empty(a:cmd)
+    if a:lnum > -1
+      noautocmd execute 'keepjumps ' . a:lnum
+    else
+      silent! execute a:cmd
+    endif
+    let lnum = line('.')
+    call skylight#buffer#add_highlight(a:lnum)
+  endif
+  noautocmd wincmd p
+endfunction
+
+let s:winid = -1
+let s:border_winid = -1
+function! skylight#float#open(bufnr, configs) abort
+  let [row, col, anchor] = s:calculate_float_pos(
+    \ a:configs.width,
+    \ a:configs.height,
+    \ a:configs.position
+    \ )
   let border_options = {
     \ 'relative': 'editor',
     \ 'anchor': anchor,
     \ 'row': row,
     \ 'col': col,
-    \ 'width': a:width,
-    \ 'height': a:height,
+    \ 'width': a:configs.width,
+    \ 'height': a:configs.height,
     \ 'style':'minimal'
     \ }
+
   let options = deepcopy(border_options)
   let options.row += (options.anchor[0] == 'N' ? 1 : -1)
   let options.col += (options.anchor[1] == 'W' ? 1 : -1)
   let options.width -= 2
   let options.height -= 2
-  let winid = nvim_open_win(a:bufnr, v:false, options)
-  let [c_top, c_right, c_bottom, c_left, c_topleft, c_topright, c_botright, c_botleft] = g:skylight_borderchars
-  let repeat_top = (border_options.width - strwidth(c_topleft) - strwidth(c_topright) - strwidth(a:title)) / strwidth(c_top)
-  let repeat_mid = (border_options.width - strwidth(c_left) - strwidth(c_right))
-  let repeat_bot = (border_options.width - strwidth(c_botleft) - strwidth(c_botright)) / strwidth(c_bottom)
-  let content = [c_topleft . a:title . repeat(c_top, repeat_top) . c_topright]
-  let content += repeat([c_left . repeat(' ', repeat_mid) . c_right], border_options.height-2)
-  let content += [c_botleft . repeat(c_bottom, repeat_bot) . c_botright]
-  let border_buf = nvim_create_buf(v:false, v:true)
-  call nvim_buf_set_lines(border_buf, 0, -1, v:true, content)
-  call nvim_buf_set_option(border_buf, 'bufhidden', 'wipe')
-  let border_winid = nvim_open_win(border_buf, v:false, border_options)
-  call nvim_win_set_option(border_winid, 'winhl', 'Normal:FloatermBorder')
-  return [winid, border_winid]
+  let s:winid = nvim_open_win(a:bufnr, v:false, options)
+  call nvim_win_set_option(s:winid, 'number', v:true)
+
+  let border_bufnr = skylight#buffer#create_border(a:configs)
+  let s:border_winid = nvim_open_win(border_bufnr, v:false, border_options)
+  call nvim_win_set_option(s:border_winid, 'winhl', 'Normal:SkylightBorder')
+  call timer_start(100, function('s:register_autocmd'))
+  return [s:winid, s:border_winid]
+endfunction
+
+function! skylight#float#exists() abort
+  return s:win_exists(s:winid)
+endfunction
+
+function! skylight#float#scroll(forward) abort
+  if !s:win_exists(s:winid)
+    call skylight#util#show_msg('No skylight windows')
+    return ''
+  endif
+  let bufnr = nvim_win_get_buf(s:winid)
+  let rowcnt = nvim_buf_line_count(bufnr)
+  let height = nvim_win_get_height(s:winid)
+  if rowcnt < height | return '' | endif
+  let pos = nvim_win_get_cursor(s:winid)
+  if a:forward
+    if pos[0] == 1
+      let pos[0] += 3 * height / 4
+    elseif pos[0] + height / 2 + 1 < rowcnt
+      let pos[0] += height / 2 + 1
+    else
+      let pos[0] = rowcnt
+    endif
+  else
+    if pos[0] == rowcnt
+      let pos[0] -= 3 * height / 4
+    elseif pos[0] - height / 2 + 1  > 1
+      let pos[0] -= height / 2 + 1
+    else
+      let pos[0] = 1
+    endif
+  endif
+  let cmd = printf('call winrestview({"lnum": %s})', pos[0])
+  call s:nvim_win_execute(s:winid, cmd)
+  return "\<Ignore>"
 endfunction
