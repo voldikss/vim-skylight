@@ -17,7 +17,14 @@ endfunction
 
 function! skylight#preview() abort
   let [filename, lnum, cmd] = skylight#search#findfile()
-  if empty(filename) | return | endif
+  if empty(filename) || !filereadable(filename)
+    call skylight#util#show_err('File or tag not found')
+    return
+  endif
+  if getfsize(filename) / (1024*1024) > 10
+    call skylight#util#show_msg('File too large', 'error')
+    return
+  endif
   let bufnr = skylight#buffer#load_buf(filename)
 
   let config = {

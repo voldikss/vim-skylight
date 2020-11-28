@@ -10,8 +10,6 @@ function! skylight#search#findfile() abort
     " nop
   elseif s:search_as_tag(fileinfo)
     " still nop
-  else
-    call skylight#util#show_err('File or tag is not found', 'error')
   endif
   return [fileinfo.filename, fileinfo.lnum, fileinfo.cmd]
 endfunction
