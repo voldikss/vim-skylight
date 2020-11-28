@@ -146,11 +146,10 @@ function! skylight#float#open(bufnr, configs) abort
     \ }
   let winid = nvim_open_win(a:bufnr, v:false, options)
   call nvim_win_set_option(winid, 'number', v:true)
-  call nvim_win_set_option(winid, 'signcolumn', 'no')
 
   call timer_start(10, { -> s:nvim_create_scroll_win(winid) })
 
-  let border_options = {
+  let bd_options = {
     \ 'relative': 'editor',
     \ 'anchor': anchor,
     \ 'row': row,
@@ -161,7 +160,7 @@ function! skylight#float#open(bufnr, configs) abort
     \ 'style':'minimal',
     \ }
   let bd_bufnr = skylight#buffer#create_border(a:configs)
-  let bd_winid = nvim_open_win(bd_bufnr, v:false, border_options)
+  let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
   call nvim_win_set_option(bd_winid, 'winhl', 'Normal:SkylightBorder')
   call timer_start(100, { -> s:register_autocmd() })
   let s:winid = winid
