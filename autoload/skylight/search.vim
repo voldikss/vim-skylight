@@ -45,7 +45,10 @@ function! s:search_as_tag(fileinfo) abort
 endfunction
 
 function! s:search_as_file(fileinfo) abort
+  let save_isfname = &isfname
+  set isfname+=(,)
   let filename = substitute(expand('<cfile>'), '^\zs\(\~\|\$HOME\)', $HOME, '')
+  let &isfname = save_isfname
   let lnumstr = matchstr(getline('.'), filename . '\(:\||\)\zs\d\+\ze')
   let lnum = empty(lnumstr) ? -1 : str2nr(lnumstr)
 
