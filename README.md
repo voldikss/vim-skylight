@@ -1,6 +1,6 @@
 # vim-skylight
 
-Preview file/symbol under cursor in the floating window.
+Search and preview file/symbol under cursor in the floating window.
 
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -32,6 +32,8 @@ Plug 'voldikss/vim-skylight'
 
 - `:SkylightJumpTo`
 
+NOTE: Both commands can also be in visual mode, e.g., `'<,'>:SkylightPreview`.
+
 ## Options
 
 - **`g:skylight_width`**
@@ -50,10 +52,10 @@ Plug 'voldikss/vim-skylight'
 
 - **`g:skylight_position`**
 
-  Type `String`. The position of the floating window. Available:
+  Type `String`. The position of the floating window.
 
-  `'top'`, `'right'`, `'bottom'`, `'left'`, `'center'`, `'topleft'`,
-  `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`.
+  Available: `'top'`, `'right'`, `'bottom'`, `'left'`, `'center'`, `'topleft'`,
+  `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place) `.
 
   Default: `'topright'`(recommended)
 
@@ -67,7 +69,9 @@ Plug 'voldikss/vim-skylight'
 
   Type `String`. Command used for `:SkylightJumpTo`.
 
-  Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'`
+  Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`.
+
+  Default: `'edit'`
 
 ## Functions
 
@@ -106,29 +110,27 @@ hi SkylightBorder guibg=orange guifg=cyan
 ## Why
 
 For a long time I was hoping to preview file under cursor in a disposable
-floating window without actually opening it. Therefore I dug into the web and
-found some awesome projects, which, however, only supports previewing from the
-quickfix window. What I want is to preview from the filename that occurs in
-any window, even the terminal window (when I am using gdb's `bt` command).
+floating window without actually opening it. Then I dug into the web and
+found some awesome projects, which, however, only support previewing files
+that are listed in the quickfix window. What I want is to preview the file
+that occurs anywhere in vim, even those in the builtin terminal window (when I am
+using gdb's `bt` command).
 
-The codes were initially buildup in my personal dotfiles. After nearly the
-whole feature was implemented, I decided to detach them from the dotfiles and
+The codes were initially buildup in my personal dotfiles. After the whole
+feature was almost implemented, I decided to detach them from the dotfiles and
 reorganize them into a plugin in case of someone who has the same requirements
 needs it.
-
-The file searching in the plugin would not be always accurate but it works
-fine most of the time.
 
 ## Screenshots
 
 - Preview files from quickfix window
 
-![](https://user-images.githubusercontent.com/20282795/100463666-29c15400-3107-11eb-9889-1b9f8d987f87.gif)
-
-- Preview files from terminal window
-
-![](https://user-images.githubusercontent.com/20282795/100463681-2e860800-3107-11eb-9d7f-e77de5f4f386.gif)
+![](https://user-images.githubusercontent.com/20282795/100506133-f4207780-31a7-11eb-9c69-30e8e254a2bb.gif)
 
 - Preview symbol
 
-![](https://user-images.githubusercontent.com/20282795/100463656-262dcd00-3107-11eb-9d89-c309b60062fa.gif)
+![](https://user-images.githubusercontent.com/20282795/100506082-ef5bc380-31a7-11eb-9618-fd37ad03f7cb.gif)
+
+- Preview files from terminal window
+
+![](https://user-images.githubusercontent.com/20282795/100506148-f5ea3b00-31a7-11eb-820e-b2f6dcc3840e.gif)

@@ -4,37 +4,25 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! skylight#jumpto() abort
-  let [filename, lnum, cmd] = skylight#search#findfile()
-  if empty(filename) | return | endif
+function! s:jumpto(filename, lnum, cmd) abort
   if &ft=='floaterm' | wincmd c | endif
   silent! execute printf('%s %s | %s',
     \ g:skylight_jump_command,
-    \ filename,
-    \ lnum > -1 ? lnum : cmd
+    \ a:filename,
+    \ a:lnum > -1 ? a:lnum : a:cmd
     \ )
 endfunction
 
-function! skylight#preview() abort
-  let [filename, lnum, cmd] = skylight#search#findfile()
-  if empty(filename) || !filereadable(filename)
-    call skylight#util#show_err('File or tag not found')
-    return
-  endif
-  if getfsize(filename) / (1024*1024) > 10
-    call skylight#util#show_msg('File too large', 'error')
-    return
-  endif
-
+function! s:preview(filename, lnum, cmd) abort
   call skylight#float#close()
-  let bufnr = skylight#buffer#load_buf(filename)
+  let bufnr = skylight#buffer#load_buf(a:filename)
 
   let config = {
     \ 'width': g:skylight_width,
     \ 'height': g:skylight_height,
     \ 'position': g:skylight_position,
     \ 'borderchars': g:skylight_borderchars,
-    \ 'title': filename,
+    \ 'title': a:filename,
     \ }
   if type(config.width) == v:t_float
     let config.width *= &columns
@@ -48,5 +36,36 @@ function! skylight#preview() abort
     let config.title = config.title[:-4] . '...'
   endif
   let [winid, _] = skylight#float#open(bufnr, config)
-  call skylight#float#locate(winid, lnum, cmd)
+  call skylight#float#locate(winid, a:lnum, a:cmd)
+endfunction
+
+function! skylight#start(action, visualmode, range) abort
+  if a:visualmode == 'v' && a:range == 2
+    let col1 = getpos("'<")[2]
+    let col2 = getpos("'>")[2]
+    let text = getline('.')
+    if empty(text)
+      call skylight#util#show_msg('No content', 'error')
+      return
+    endif
+    let text = text[col1-1 : col2-1]
+    let [filename, lnum, cmd] = skylight#search#findfile(text)
+  else
+    let [filename, lnum, cmd] = skylight#search#findfile('')
+  endif
+
+  if empty(filename) || !filereadable(filename)
+    call skylight#util#show_err('File or tag not found')
+    return
+  endif
+  if getfsize(filename) / (1024*1024) > 10
+    call skylight#util#show_msg('File too large', 'error')
+    return
+  endif
+
+  if a:action == 'jumpto'
+    call s:jumpto(filename, lnum, cmd)
+  elseif a:action == 'preview'
+    call s:preview(filename, lnum, cmd)
+  endif
 endfunction

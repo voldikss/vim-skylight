@@ -14,7 +14,7 @@ let g:skylight_position     = get(g:, 'skylight_position', 'topright')
 let g:skylight_borderchars  = get(g:, 'skylight_borderchars', ['─', '│', '─', '│', '╭', '╮', '╯', '╰'])
 let g:skylight_jump_command = get(g:, 'skylight_jump_command', 'edit')
 
-command! SkylightPreview call skylight#preview()
-command! SkylightJumpTo  call skylight#jumpto()
+command! -range SkylightPreview call skylight#start('preview', visualmode(), <range>)
+command! -range SkylightJumpTo  call skylight#start('jumpto', visualmode(), <range>)
 
 hi def link SkylightBorder Normal

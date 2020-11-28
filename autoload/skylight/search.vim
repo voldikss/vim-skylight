@@ -4,18 +4,19 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! skylight#search#findfile() abort
+function! skylight#search#findfile(pattern) abort
   let fileinfo = {'filename': '', 'lnum': -1, 'cmd': ''}
-  if s:search_as_file(fileinfo)
+  if s:search_as_file(fileinfo, a:pattern)
     " nop
-  elseif s:search_as_tag(fileinfo)
+  elseif s:search_as_tag(fileinfo, a:pattern)
     " still nop
   endif
   return [fileinfo.filename, fileinfo.lnum, fileinfo.cmd]
 endfunction
 
-function! s:search_as_tag(fileinfo) abort
-  let pattern = expand('<cword>')
+function! s:search_as_tag(fileinfo, pattern) abort
+  let pattern = empty(a:pattern) ? expand('<cword>') : a:pattern
+  let pattern = '^' . pattern . '$'
   let taglists = taglist(pattern)
   if !empty(taglists)
     let filename = taglists[0]['filename']
@@ -42,12 +43,21 @@ function! s:search_as_tag(fileinfo) abort
   endif
 endfunction
 
-function! s:search_as_file(fileinfo) abort
-  let save_isfname = &isfname
-  set isfname+=(,)
-  let filename = substitute(expand('<cfile>'), '^\zs\(\~\|\$HOME\)', $HOME, '')
-  let &isfname = save_isfname
-  let lnumstr = matchstr(getline('.'), filename . '\(:\||\)\zs\d\+\ze')
+function! s:search_as_file(fileinfo, pattern) abort
+  if !empty(a:pattern)
+    let pattern = a:pattern
+    let lnumstr = matchstr(pattern, '\(:\||\)\zs\d\+\ze')
+    if empty(lnumstr)
+      let lnumstr = matchstr(getline('.'), pattern . '\(:\||\)\zs\d\+\ze')
+    endif
+  else
+    let save_isfname = &isfname
+    set isfname+=(,)
+    let pattern = expand('<cfile>')
+    let &isfname = save_isfname
+    let lnumstr = matchstr(getline('.'), pattern . '\(:\||\)\zs\d\+\ze')
+  endif
+  let filename = substitute(pattern, '^\zs\(\~\|\$HOME\)', $HOME, '')
   let lnum = empty(lnumstr) ? -1 : str2nr(lnumstr)
 
   if filereadable(filename)
