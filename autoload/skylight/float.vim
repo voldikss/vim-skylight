@@ -87,11 +87,11 @@ endfunction
 function! s:register_autocmd(...) abort
   augroup close_skylight_float
     autocmd!
-    autocmd CursorMoved * call timer_start(100, function('s:close_float_win'))
+    autocmd CursorMoved * call timer_start(100, function('skylight#float#close'))
   augroup END
 endfunction
 
-function! s:close_float_win(...) abort
+function! skylight#float#close(...) abort
   if win_getid() == s:winid | return | endif
   call skylight#buffer#clear_highlight()
   if s:win_exists(s:winid)
@@ -102,7 +102,9 @@ function! s:close_float_win(...) abort
     call nvim_win_close(s:border_winid, v:true)
     let s:border_winid = -1
   endif
-  autocmd! close_skylight_float
+  if exists('#close_skylight_float')
+    autocmd! close_skylight_float
+  endif
 endfunction
 
 function! skylight#float#locate(winid, lnum, cmd) abort

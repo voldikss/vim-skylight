@@ -11,6 +11,7 @@ function! skylight#buffer#load_buf(filename) abort
   else
     let s:bufnr = bufadd(a:filename)
     call nvim_buf_set_option(s:bufnr, 'bufhidden', 'wipe')
+    call nvim_buf_set_option(s:bufnr, 'buflisted', v:false)
   endif
   return s:bufnr
 endfunction

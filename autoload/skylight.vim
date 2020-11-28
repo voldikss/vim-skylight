@@ -25,6 +25,8 @@ function! skylight#preview() abort
     call skylight#util#show_msg('File too large', 'error')
     return
   endif
+
+  call skylight#float#close()
   let bufnr = skylight#buffer#load_buf(filename)
 
   let config = {
