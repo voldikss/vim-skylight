@@ -14,10 +14,11 @@ Preview file/symbol under cursor in the floating window.
 
 ## Requirements
 
-NVIM >= 0.4.3, only works in neovim.
+Only works in NVIM >= 0.4.3
 
-Other than tags, the plugin also use [coc.nvim](https://github.com/neoclide/coc.nvim)
-for searching symbols. So it would be better to have coc installed.
+Other than using tags, the plugin can also use LSP for searching symbols.
+Therefore it would be better to have an LSP client (only support
+[coc.nvim](https://github.com/neoclide/coc.nvim) by now) installed.
 
 ## Installation
 
@@ -78,11 +79,20 @@ Plug 'voldikss/vim-skylight'
 
 ```vim
 " Configuration **example**
-nnoremap <silent><expr> <M-f> skylight#float#scroll(1)
-nnoremap <silent><expr> <M-b> skylight#float#scroll(0)
-nnoremap <silent>       go    :<C-u>SkylightJumpTo<CR>
-nnoremap <silent>       gp    :<C-u>SkylightPreview<CR>
+nnoremap <silent>       go    :SkylightJumpTo<CR>
+nnoremap <silent>       gp    :SkylightPreview<CR>
 ```
+
+The following mappings can be used for scrolling floating widow.
+
+```vim
+nnoremap <silent><expr> <C-f> skylight#float#scroll(1)
+nnoremap <silent><expr> <C-b> skylight#float#scroll(0)
+```
+
+NOTE: The [scrolling mappings](https://github.com/neoclide/coc.nvim/#example-vim-configuration)
+of coc.nvim also works for this plugin, so if you are using coc you don't have
+to use the above scroll mappings.
 
 ## Highlights
 
