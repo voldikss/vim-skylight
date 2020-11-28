@@ -40,20 +40,12 @@ function! s:preview(filename, lnum, cmd) abort
 endfunction
 
 function! skylight#start(action, visualmode, range) abort
+  let text = ''
   if a:visualmode == 'v' && a:range == 2
-    let col1 = getpos("'<")[2]
-    let col2 = getpos("'>")[2]
-    let text = getline('.')
-    if empty(text)
-      call skylight#util#show_msg('No content', 'error')
-      return
-    endif
-    let text = text[col1-1 : col2-1]
-    let [filename, lnum, cmd] = skylight#search#findfile(text)
-  else
-    let [filename, lnum, cmd] = skylight#search#findfile('')
+    let text = skylight#util#get_selected_text()
   endif
 
+  let [filename, lnum, cmd] = skylight#search#findfile(text)
   if empty(filename) || !filereadable(filename)
     call skylight#util#show_err('File or tag not found')
     return
