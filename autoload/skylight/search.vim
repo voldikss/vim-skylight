@@ -51,10 +51,7 @@ function! s:search_as_file(fileinfo, pattern) abort
       let lnumstr = matchstr(getline('.'), pattern . '\(:\||\)\zs\d\+\ze')
     endif
   else
-    let save_isfname = &isfname
-    set isfname+=(,)
     let pattern = expand('<cfile>')
-    let &isfname = save_isfname
     let lnumstr = matchstr(getline('.'), pattern . '\(:\||\)\zs\d\+\ze')
   endif
   let filename = substitute(pattern, '^\zs\(\~\|\$HOME\)', $HOME, '')
