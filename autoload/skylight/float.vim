@@ -91,7 +91,7 @@ function! s:register_autocmd() abort
   augroup END
 endfunction
 
-function! skylight#float#close(...) abort
+function! skylight#float#close() abort
   if win_getid() == s:winid | return | endif
   call skylight#buffer#clear_highlight()
   if s:win_exists(s:winid)
