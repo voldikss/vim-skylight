@@ -77,13 +77,6 @@ function! s:win_exists(winid) abort
   return !empty(getwininfo(a:winid))
 endfunction
 
-function! s:nvim_win_execute(winid, command) abort
-  let curr = nvim_get_current_win()
-  noa keepalt call nvim_set_current_win(a:winid)
-  exec a:command
-  noa keepalt call nvim_set_current_win(curr)
-endfunction
-
 function! s:register_autocmd() abort
   augroup close_skylight_float
     autocmd!
@@ -168,91 +161,18 @@ function! skylight#float#open(bufnr, configs) abort
   return [winid, bd_winid]
 endfunction
 
-function! skylight#float#exists() abort
-  return s:win_exists(s:winid)
+function! skylight#float#has_scroll() abort
+  return s:win_exists(s:winid) && s:win_exists(s:sb_winid)
 endfunction
 
-function! skylight#float#scroll(forward) abort
-  let winid = s:winid
-  if !s:win_exists(winid)
+function! skylight#float#scroll(forward, ...) abort
+  let amount = get(a:, 1, 0)
+  if !s:win_exists(s:winid)
     call skylight#util#show_msg('No skylight windows')
-    return ''
-  endif
-  let bufnr = nvim_win_get_buf(winid)
-  let rowcnt = nvim_buf_line_count(bufnr)
-  let height = nvim_win_get_height(winid)
-  if rowcnt < height | return '' | endif
-  let pos = nvim_win_get_cursor(winid)
-  if a:forward
-    if pos[0] == 1
-      let pos[0] += 3 * height / 4
-    elseif pos[0] + height / 2 + 1 < rowcnt
-      let pos[0] += height / 2 + 1
-    else
-      let pos[0] = rowcnt
-    endif
   else
-    if pos[0] == rowcnt
-      let pos[0] -= 3 * height / 4
-    elseif pos[0] - height / 2 + 1  > 1
-      let pos[0] -= height / 2 + 1
-    else
-      let pos[0] = 1
-    endif
+    call skylight#cocf#scroll_win(s:winid, a:forward, amount)
   endif
-  let cmd = printf('call winrestview({"lnum": %s})', pos[0])
-  call s:nvim_win_execute(winid, cmd)
-  call s:nvim_refresh_scroll_bar()
-  return "\<Ignore>"
-endfunction
-
-function! s:nvim_refresh_scroll_bar() abort
-  let [winid, sb_winid] = [s:winid, s:sb_winid]
-  let bufnr = nvim_win_get_buf(winid)
-  let width = nvim_win_get_width(winid)
-  let height = nvim_win_get_height(winid)
-  let wrap = nvim_win_get_option(winid, 'wrap')
-  let content_height = s:content_height(bufnr, width, wrap)
-  if height >= content_height
-    return
-  endif
-
-  let wininfo = getwininfo(winid)[0]
-  let thumb_start = 0
-  let thumb_length = max([1, float2nr(floor(height * (height + 0.0)/content_height))])
-  if wininfo['topline'] != 1
-    let linecount = nvim_buf_line_count(bufnr)
-    let topline = wininfo['topline']
-    let botline = wininfo['botline']
-    if botline >= linecount
-      let thumb_start = height - thumb_length
-    else
-      let thumb_start = max([1, float2nr(round((height - thumb_length + 0.0)*(topline - 1.0)/(content_height - height)))])
-    endif
-  endif
-
-  let sb_bufnr = nvim_win_get_buf(sb_winid)
-  call nvim_buf_clear_namespace(sb_bufnr, -1, 0, -1)
-  for idx in range(0, height - 1)
-    if idx >= thumb_start && idx < thumb_start + thumb_length
-      call nvim_buf_add_highlight(sb_bufnr, -1, 'PmenuThumb', idx, 0, 1)
-    else
-      call nvim_buf_add_highlight(sb_bufnr, -1, 'PmenuSbar', idx, 0, 1)
-    endif
-  endfor
-endfunction
-
-function! s:content_height(bufnr, width, wrap) abort
-  if !a:wrap
-    return nvim_buf_line_count(a:bufnr)
-  endif
-  let lines = nvim_buf_get_lines(a:bufnr, 0, -1, 0)
-  let total = 0
-  for line in lines
-    let dw = max([1, strdisplaywidth(line)])
-    let total += float2nr(ceil(str2float(string(dw))/a:width))
-  endfor
-  return total
+  return mode() =~ '^i' || mode() ==# 'v' ? "" : "\<Ignore>"
 endfunction
 
 let s:sb_winid = -1
@@ -277,7 +197,8 @@ function! s:nvim_create_scroll_win(winid) abort
     \ }
   let sb_bufnr = skylight#buffer#create_scratch_buf(repeat([' '], config.height))
   let sb_winid = nvim_open_win(sb_bufnr, v:false, options)
+  call nvim_win_set_var(a:winid, 'scroll_winid', sb_winid)
   let s:sb_winid = sb_winid
-  call s:nvim_refresh_scroll_bar()
+  call skylight#cocf#refresh_scroll_bar(a:winid)
   return sb_winid
 endfunction

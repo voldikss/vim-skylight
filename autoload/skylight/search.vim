@@ -72,7 +72,7 @@ function! s:search_as_file(fileinfo, pattern) abort
   endif
 
   if filename =~ '^/' && !filereadable(filename)
-    let g:skylight_errmsg ='File is not found'
+    let g:skylight_errmsg ='File not found'
     return 0
   endif
 

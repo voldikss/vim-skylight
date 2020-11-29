@@ -2,7 +2,6 @@
 
 Search and preview file/symbol under cursor in the floating window.
 
-- [Requirements](#requirements)
 - [Installation](#installation)
 - [Commands](#commands)
 - [Options](#options)
@@ -12,19 +11,17 @@ Search and preview file/symbol under cursor in the floating window.
 - [Why](#why)
 - [Screenshots](#screenshots)
 
-## Requirements
+## Installation
+
+```vim
+Plug 'voldikss/vim-skylight'
+```
 
 Only works in NVIM >= 0.4.3
 
 Other than using tags, the plugin can also use LSP for searching symbols.
 Therefore it would be better to have an LSP client (only support
 [coc.nvim](https://github.com/neoclide/coc.nvim) by now) installed.
-
-## Installation
-
-```vim
-Plug 'voldikss/vim-skylight'
-```
 
 ## Commands
 
@@ -75,14 +72,14 @@ NOTE: Both commands can also be in visual mode, e.g., `'<,'>:SkylightPreview`.
 
 ## Functions
 
-- `skylight#float#exists()`
+- `skylight#float#has_scroll()`
 
-- `skylight#float#scroll({forward})`
+- `skylight#float#scroll({forward}, [amount])`
 
 ## Keymaps
 
 ```vim
-" Configuration **example**
+" Configuration example
 nnoremap <silent>       go    :SkylightJumpTo<CR>
 nnoremap <silent>       gp    :SkylightPreview<CR>
 ```
@@ -90,13 +87,9 @@ nnoremap <silent>       gp    :SkylightPreview<CR>
 The following mappings can be used for scrolling floating widow.
 
 ```vim
-nnoremap <silent><expr> <C-f> skylight#float#scroll(1)
-nnoremap <silent><expr> <C-b> skylight#float#scroll(0)
+nnoremap <silent><expr> <C-f> skylight#float#has_scroll() ? skylight#float#scroll(1)
+nnoremap <silent><expr> <C-b> skylight#float#has_scroll() ? skylight#float#scroll(0)
 ```
-
-NOTE: The [scrolling mappings](https://github.com/neoclide/coc.nvim/#example-vim-configuration)
-of coc.nvim also works for this plugin, so if you are using coc you don't have
-to use the above scroll mappings.
 
 ## Highlights
 
@@ -118,7 +111,7 @@ using gdb's `bt` command).
 
 The codes were initially buildup in my personal dotfiles. After the whole
 feature was almost implemented, I decided to detach them from the dotfiles and
-reorganize them into a plugin in case of someone who has the same requirements
+reorganize them into a plugin in case of someone who has the same requirement
 needs it.
 
 ## Screenshots
