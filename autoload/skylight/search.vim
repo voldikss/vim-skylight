@@ -79,7 +79,12 @@ function! s:search_as_file(fileinfo, pattern) abort
     let filename = substitute(filename, '^\(../\|./\)', '', 'g')
   endwhile
   " do search
-  let filename = findfile(filename, '.,**5;' . skylight#path#get_root())
+  let path = '.,**5'
+  let root = skylight#path#get_root()
+  if !empty(root)
+    let path .= ';' . root
+  endif
+  let filename = findfile(filename, path)
   if !empty(filename)
     let a:fileinfo['filename'] = fnamemodify(filename, ':p')
     let a:fileinfo['lnum'] = lnum
