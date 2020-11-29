@@ -32,8 +32,10 @@ function! s:preview(filename, lnum, cmd) abort
     let config.height *= (&lines - &cmdheight - 1)
     let config.height = float2nr(config.height)
   endif
-  if strdisplaywidth(config.title) > config.width - 2
-    let config.title = config.title[:-4] . '...'
+  let title_width = strdisplaywidth(config.title)
+  let capacity = config.width - 2
+  if title_width > capacity
+    let config.title = '...' . config.title[title_width-capacity+3:]
   endif
   let [winid, _] = skylight#float#open(bufnr, config)
   call skylight#float#locate(winid, a:lnum, a:cmd)
