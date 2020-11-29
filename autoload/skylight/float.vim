@@ -102,6 +102,9 @@ function! skylight#float#close() abort
   if exists('#close_skylight_float')
     autocmd! close_skylight_float
   endif
+  if exists('#refresh_scroll_bar')
+    autocmd! refresh_scroll_bar
+  endif
 endfunction
 
 function! skylight#float#locate(winid, lnum, cmd) abort
@@ -116,6 +119,15 @@ function! skylight#float#locate(winid, lnum, cmd) abort
     let lnum = line('.')
     call skylight#buffer#add_highlight(a:lnum)
   endif
+  " NOTE: can not observe it because of the issue in `s:nvim_create_scroll_win`
+  augroup refresh_scroll_bar
+    autocmd!
+    execute printf(
+      \ 'autocmd CursorMoved <buffer=%s> call skylight#cocf#refresh_scroll_bar(%s)',
+      \ nvim_win_get_buf(a:winid),
+      \ a:winid
+      \ )
+  augroup END
   noautocmd wincmd p
 endfunction
 
