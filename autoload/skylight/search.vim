@@ -44,15 +44,16 @@ function! s:search_as_tag(fileinfo, pattern) abort
 endfunction
 
 function! s:search_as_file(fileinfo, pattern) abort
+  let lnumpat = '\(:\|(\||\)\zs\d\+\ze'
   if !empty(a:pattern)
     let pattern = a:pattern
-    let lnumstr = matchstr(pattern, '\(:\||\)\zs\d\+\ze')
+    let lnumstr = matchstr(pattern, lnumpat)
     if empty(lnumstr)
-      let lnumstr = matchstr(getline('.'), pattern . '\(:\||\)\zs\d\+\ze')
+      let lnumstr = matchstr(getline('.'), pattern . lnumpat)
     endif
   else
     let pattern = expand('<cfile>')
-    let lnumstr = matchstr(getline('.'), pattern . '\(:\||\)\zs\d\+\ze')
+    let lnumstr = matchstr(getline('.'), pattern . lnumpat)
   endif
   let filename = substitute(pattern, '^\zs\(\~\|\$HOME\)', $HOME, '')
   let lnum = empty(lnumstr) ? -1 : str2nr(lnumstr)
