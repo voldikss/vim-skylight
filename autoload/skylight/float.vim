@@ -119,7 +119,6 @@ function! skylight#float#locate(winid, lnum, cmd) abort
     let lnum = line('.')
     call skylight#buffer#add_highlight(a:lnum)
   endif
-  " NOTE: can not observe it because of the issue in `s:nvim_create_scroll_win`
   augroup refresh_scroll_bar
     autocmd!
     execute printf(
@@ -131,35 +130,48 @@ function! skylight#float#locate(winid, lnum, cmd) abort
   noautocmd wincmd p
 endfunction
 
-let s:winid = -1
-let s:bd_winid = -1
 function! skylight#float#open(bufnr, configs) abort
-  let [row, col, anchor] = s:calculate_float_pos(
+  let [
+    \ a:configs.row,
+    \ a:configs.col,
+    \ a:configs.anchor
+  \ ] = s:calculate_float_pos(
     \ a:configs.width,
     \ a:configs.height,
     \ a:configs.position
-    \ )
+  \ )
+  let winid = s:nvim_create_skylight_win(a:bufnr, a:configs)
+  call s:nvim_create_scroll_win(winid, a:configs)
+  call s:nvim_create_border_win(winid, a:configs)
+  call timer_start(100, { -> s:register_autocmd() })
+  return winid
+endfunction
 
+let s:winid = -1
+function! s:nvim_create_skylight_win(bufnr, configs) abort
   let options = {
     \ 'relative': 'editor',
-    \ 'anchor': anchor,
-    \ 'row': row + (anchor[0] == 'N' ? 1 : -1),
-    \ 'col': col + (anchor[1] == 'W' ? 1 : -1),
-    \ 'width': a:configs.width - 2,
+    \ 'anchor': a:configs.anchor,
+    \ 'row': a:configs.row + (a:configs.anchor[0] == 'N' ? 1 : -1),
+    \ 'col': a:configs.col + (a:configs.anchor[1] == 'W' ? 1 : -2),
+    \ 'width': a:configs.width - 3,
     \ 'height': a:configs.height - 2,
     \ 'style':'minimal',
     \ }
   let winid = nvim_open_win(a:bufnr, v:false, options)
   call nvim_win_set_option(winid, 'number', v:true)
   call nvim_win_set_option(winid, 'signcolumn', 'no')
+  let s:winid = winid
+  return winid
+endfunction
 
-  call timer_start(50, { -> s:nvim_create_scroll_win(winid) })
-
+let s:bd_winid = -1
+function! s:nvim_create_border_win(winid, configs) abort
   let bd_options = {
     \ 'relative': 'editor',
-    \ 'anchor': anchor,
-    \ 'row': row,
-    \ 'col': col,
+    \ 'anchor': a:configs.anchor,
+    \ 'row': a:configs.row,
+    \ 'col': a:configs.col,
     \ 'width': a:configs.width,
     \ 'height': a:configs.height,
     \ 'focusable': v:false,
@@ -168,10 +180,28 @@ function! skylight#float#open(bufnr, configs) abort
   let bd_bufnr = skylight#buffer#create_border(a:configs)
   let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
   call nvim_win_set_option(bd_winid, 'winhl', 'Normal:SkylightBorder')
-  call timer_start(100, { -> s:register_autocmd() })
-  let s:winid = winid
+  call nvim_win_set_var(a:winid, 'border_winid', bd_winid)
   let s:bd_winid = bd_winid
-  return [winid, bd_winid]
+  return bd_winid
+endfunction
+
+let s:sb_winid = -1
+function! s:nvim_create_scroll_win(winid, configs) abort
+  let options = {
+    \ 'relative': 'editor',
+    \ 'anchor': a:configs.anchor,
+    \ 'row': a:configs.row + (a:configs.anchor[0] == 'N' ? 1 : -1),
+    \ 'col': a:configs.col + (a:configs.anchor[1] == 'W' ? (a:configs.width-2) : -1),
+    \ 'width': 1,
+    \ 'height': a:configs.height - 2,
+    \ 'style': 'minimal',
+    \ }
+  let sb_bufnr = skylight#buffer#create_scratch_buf(repeat([' '], a:configs.height - 2))
+  let sb_winid = nvim_open_win(sb_bufnr, v:false, options)
+  call nvim_win_set_var(a:winid, 'scroll_winid', sb_winid)
+  call skylight#cocf#refresh_scroll_bar(a:winid)
+  let s:sb_winid = sb_winid
+  return sb_winid
 endfunction
 
 function! skylight#float#has_scroll() abort
@@ -186,32 +216,4 @@ function! skylight#float#scroll(forward, ...) abort
     call skylight#cocf#scroll_win(s:winid, a:forward, amount)
   endif
   return mode() =~ '^i' || mode() ==# 'v' ? "" : "\<Ignore>"
-endfunction
-
-let s:sb_winid = -1
-function! s:nvim_create_scroll_win(winid) abort
-  " move the content window
-  let config = nvim_win_get_config(a:winid)
-  let config.width -= 1
-  let config.col -= 1
-  " NOTE: this will cause flicker problem and reset `number`
-  " call nvim_win_set_config(a:winid, config)
-
-  " create the scroll window
-  let [row, col] = nvim_win_get_position(a:winid)
-  let options = {
-    \ 'relative': 'editor',
-    \ 'row': row,
-    \ 'col': col + config.width,
-    \ 'width': 1,
-    \ 'height': config.height,
-    \ 'focusable': v:false,
-    \ 'style': 'minimal',
-    \ }
-  let sb_bufnr = skylight#buffer#create_scratch_buf(repeat([' '], config.height))
-  let sb_winid = nvim_open_win(sb_bufnr, v:false, options)
-  call nvim_win_set_var(a:winid, 'scroll_winid', sb_winid)
-  let s:sb_winid = sb_winid
-  call skylight#cocf#refresh_scroll_bar(a:winid)
-  return sb_winid
 endfunction

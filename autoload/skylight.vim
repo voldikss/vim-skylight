@@ -37,7 +37,7 @@ function! skylight#preview(filename, lnum, cmd) abort
   if title_width > capacity
     let config.title = '...' . config.title[title_width-capacity+3:]
   endif
-  let [winid, _] = skylight#float#open(bufnr, config)
+  let winid = skylight#float#open(bufnr, config)
   call skylight#float#locate(winid, a:lnum, a:cmd)
 endfunction
 

@@ -21,22 +21,6 @@ function! s:max_firstline(lines, height, width) abort
   return min([len(a:lines), max + 1])
 endfunction
 
-function! s:content_height(bufnr, width, wrap) abort
-  if !bufloaded(a:bufnr)
-    return 0
-  endif
-  if !a:wrap
-    return has('nvim') ? nvim_buf_line_count(a:bufnr) : len(getbufline(a:bufnr, 1, '$'))
-  endif
-  let lines = has('nvim') ? nvim_buf_get_lines(a:bufnr, 0, -1, 0) : getbufline(a:bufnr, 1, '$')
-  let total = 0
-  for line in lines
-    let dw = max([1, strdisplaywidth(line)])
-    let total += float2nr(ceil(str2float(string(dw))/a:width))
-  endfor
-  return total
-endfunction
-
 " Get best lnum by topline
 function! s:get_cursorline(topline, lines, scrolloff, width, height) abort
   let lastline = len(a:lines)
@@ -160,23 +144,19 @@ endfunction
 
 function! skylight#cocf#refresh_scroll_bar(winid) abort
   let bufnr = nvim_win_get_buf(a:winid)
-  let width = nvim_win_get_width(a:winid)
   let height = nvim_win_get_height(a:winid)
-  let wrap = nvim_win_get_option(a:winid, 'wrap')
-  let content_height = s:content_height(bufnr, width, wrap)
-  if height >= content_height | return | endif
+  let linecount = nvim_buf_line_count(bufnr)
 
   let wininfo = getwininfo(a:winid)[0]
   let thumb_start = 0
-  let thumb_length = max([1, float2nr(floor(height * (height + 0.0)/content_height))])
+  let thumb_length = max([1, float2nr(floor(height * (height + 0.0)/linecount))])
   if wininfo['topline'] != 1
-    let linecount = nvim_buf_line_count(bufnr)
     let topline = wininfo['topline']
     let botline = wininfo['botline']
     if botline >= linecount
       let thumb_start = height - thumb_length
     else
-      let thumb_start = max([1, float2nr(round((height - thumb_length + 0.0)*(topline - 1.0)/(content_height - height)))])
+      let thumb_start = max([1, float2nr(round((height - thumb_length + 0.0)*(topline - 1.0)/(linecount - height)))])
     endif
   endif
 
