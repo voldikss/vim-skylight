@@ -1,5 +1,5 @@
 " ============================================================================
-" FileName: skylight#nasync.vim
+" FileName: skylight#async.vim
 " Author: voldikss <dyzplus@gmail.com>
 " GitHub: https://github.com/voldikss
 " ============================================================================
@@ -46,13 +46,13 @@ function s:vim.close() dict
   call jobstop(self.id)
 endfunction
 
-function! skylight#nasync#new()
+function! skylight#async#new()
   let s:vim.id = jobstart(v:progpath . ' --embed', {'rpc': v:true})
   let s:vim.async = 1
   return s:vim
 endfunction
 
-function! skylight#nasync#close() abort
+function! skylight#async#close() abort
   if s:vim.isvalid()
     call s:vim.close()
   endif

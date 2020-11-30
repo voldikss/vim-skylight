@@ -47,7 +47,7 @@ function! s:search_as_file(pattern, action) abort
     let path .= ';' . root
   endif
 
-  let vim = skylight#nasync#new()
+  let vim = skylight#async#new()
   let cmd = [
             \ printf(
               \ 'let F = { -> findfile("%s", "%s")}',
@@ -70,7 +70,7 @@ function! s:stop_findfile() abort
   if !s:succeed
     call skylight#util#show_msg('Stop searching due to timeout', 'info')
   endif
-  call skylight#nasync#close()
+  call skylight#async#close()
 endfunction
 
 function! s:search_as_tag(pattern, action) abort
