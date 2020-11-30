@@ -6,7 +6,7 @@
 
 let s:succeed = 0
 
-function! s:search_as_file(fileinfo, pattern) abort
+function! s:search_as_file(pattern, action) abort
   let lnumpat = '\(:\|(\||\)\zs\d\+\ze'
   if !empty(a:pattern)
     let pattern = a:pattern

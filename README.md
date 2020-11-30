@@ -100,7 +100,8 @@ nnoremap <silent><expr> <C-b> skylight#float#has_scroll() ? skylight#float#scrol
 
 ## Highlights
 
-`SkylightBorder`, which is linked to `Normal` by default, can be used to specify the border style.
+`SkylightBorder`, which is linked to `Normal` by default, can be used to
+specify the border style.
 
 ```vim
 " Configuration example
@@ -120,6 +121,13 @@ The codes were initially buildup in my personal dotfiles. After the whole
 feature was almost implemented, I decided to detach them from the dotfiles and
 reorganize them into a plugin in case of someone who has the same requirement
 needs it.
+
+## Known issues
+
+Sometimes can not find the files in the hidden folders when performing
+downward searching. That is because vim's file searching doesn't include
+hidden directories, I am considering using another suitable file-finder cli
+tool for the plugin but this will not come out in the short term.
 
 ## Screenshots
 
