@@ -4,7 +4,7 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! s:jumpto(filename, lnum, cmd) abort
+function! skylight#jumpto(filename, lnum, cmd) abort
   if &ft=='floaterm' | wincmd c | endif
   silent! execute printf('%s %s | %s',
     \ g:skylight_jump_command,
@@ -13,7 +13,7 @@ function! s:jumpto(filename, lnum, cmd) abort
     \ )
 endfunction
 
-function! s:preview(filename, lnum, cmd) abort
+function! skylight#preview(filename, lnum, cmd) abort
   call skylight#float#close()
   let bufnr = skylight#buffer#load_buf(a:filename)
 
@@ -46,20 +46,5 @@ function! skylight#start(action, visualmode, range) abort
   if a:visualmode == 'v' && a:range == 2
     let text = skylight#util#get_selected_text()
   endif
-
-  let [filename, lnum, cmd] = skylight#search#findfile(text)
-  if empty(filename) || !filereadable(filename)
-    call skylight#util#show_err('File or tag not found')
-    return
-  endif
-  if getfsize(filename) / (1024*1024) > 10
-    call skylight#util#show_msg('File too large', 'error')
-    return
-  endif
-
-  if a:action == 'jumpto'
-    call s:jumpto(filename, lnum, cmd)
-  elseif a:action == 'preview'
-    call s:preview(filename, lnum, cmd)
-  endif
+  call skylight#search#start(text, a:action)
 endfunction

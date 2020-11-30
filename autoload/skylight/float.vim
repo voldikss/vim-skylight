@@ -151,8 +151,9 @@ function! skylight#float#open(bufnr, configs) abort
     \ }
   let winid = nvim_open_win(a:bufnr, v:false, options)
   call nvim_win_set_option(winid, 'number', v:true)
+  call nvim_win_set_option(winid, 'signcolumn', 'no')
 
-  call timer_start(10, { -> s:nvim_create_scroll_win(winid) })
+  call timer_start(50, { -> s:nvim_create_scroll_win(winid) })
 
   let bd_options = {
     \ 'relative': 'editor',

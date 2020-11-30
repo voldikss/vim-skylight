@@ -11,6 +11,17 @@ Search and preview file/symbol under cursor in the floating window.
 - [Why](#why)
 - [Screenshots](#screenshots)
 
+## Rationale
+
+File searching is initially inspired by vim's `gf`. It fundamentally works by
+invoking the build-in function `findfile` but asynchronously. Therefore it
+will never block your actions.
+
+Symbol searching basically depends on pre-generated tag files. Other than
+using tags, the plugin can also use LSP for searching symbols. Therefore it
+would be better to have an LSP client (only support
+[coc.nvim](https://github.com/neoclide/coc.nvim) by now) installed.
+
 ## Installation
 
 ```vim
@@ -18,10 +29,6 @@ Plug 'voldikss/vim-skylight'
 ```
 
 Only works in NVIM >= 0.4.3
-
-Other than using tags, the plugin can also use LSP for searching symbols.
-Therefore it would be better to have an LSP client (only support
-[coc.nvim](https://github.com/neoclide/coc.nvim) by now) installed.
 
 ## Commands
 
