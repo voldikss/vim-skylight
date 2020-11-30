@@ -36,7 +36,7 @@ function! s:search_as_file(pattern, action) abort
     return
   endif
 
-  " remote `./` and `../`
+  " remove `./` and `../`
   while filename =~ '^\(../\|./\)'
     let filename = substitute(filename, '^\(../\|./\)', '', 'g')
   endwhile
