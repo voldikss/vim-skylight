@@ -93,8 +93,8 @@ nnoremap <silent>       gp    :SkylightPreview<CR>
 The following mappings can be used for scrolling floating widow.
 
 ```vim
-nnoremap <silent><expr> <C-f> skylight#float#has_scroll() ? skylight#float#scroll(1)
-nnoremap <silent><expr> <C-b> skylight#float#has_scroll() ? skylight#float#scroll(0)
+nnoremap <silent><expr> <C-f> skylight#float#has_scroll() ? skylight#float#scroll(1) : "\<C-f>"
+nnoremap <silent><expr> <C-b> skylight#float#has_scroll() ? skylight#float#scroll(0) : "\<C-b>"
 ```
 
 ## Highlights
