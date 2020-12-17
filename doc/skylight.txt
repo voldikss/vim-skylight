@@ -7,8 +7,7 @@ Contents ~
  2. Rationale                                              |skylight-rationale|
  3. Installation                                        |skylight-installation|
  4. Commands                                                |skylight-commands|
-   1. :SkylightPreview                                        |skylightpreview|
-   2. :SkylightJumpTo                                          |skylightjumpto|
+   1. :Skylight                                                     |skylight|
  5. Options                                                  |skylight-options|
    1. g:skylight_width                                       |g:skylight_width|
    2. g:skylight_height                                     |g:skylight_height|
@@ -56,14 +55,12 @@ Only works in NVIM >= 0.4.3
 Commands ~
 
 -------------------------------------------------------------------------------
-                                                              *SkylightPreview*
-:SkylightPreview ~
+                                                              *Skylight*
+:Skylight[!]
 
--------------------------------------------------------------------------------
-                                                               *SkylightJumpTo*
-:SkylightJumpTo ~
+- `:Skylight [file|tag|word]` for previewing
 
-NOTE: Both commands can also be in visual mode, e.g., `"'<,'>:SkylightPreview"`.
+- `:Skylight! [file|tag|word]` for jumping to
 
 ===============================================================================
                                                              *skylight-options*
@@ -110,7 +107,7 @@ Default: "['─', '│', '─', '│', '╭', '╮', '╯', '╰']"
                                                       *g:skylight_jump_command*
 g:skylight_jump_command ~
 
-Type |String|. Command used for |SkylightJumpTo|.
+Type |String|. Command used for |Skylight!|.
 
 Available: "'edit'", "'split'", "'vsplit'", "'tabe'", "'drop'".
 
@@ -133,8 +130,10 @@ skylight#float#scroll({forward}, [amount]) ~
 Keymaps ~
     >
   " Configuration example
-  nnoremap <silent>       go    :SkylightJumpTo<CR>
-  nnoremap <silent>       gp    :SkylightPreview<CR>
+    nnoremap <silent>       gp    :Skylight file<CR>
+    vnoremap <silent>       gp    :Skylight file<CR>
+    nnoremap <silent>       go    :Skylight! file<CR>
+    vnoremap <silent>       go    :Skylight! file<CR>
 <
 The following mappings can be used for scrolling floating widow.
     >

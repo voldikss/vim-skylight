@@ -1,6 +1,6 @@
 # vim-skylight
 
-Search and preview file/symbol under cursor in the floating window.
+Search and preview file/symbol/word under cursor in the floating window.
 
 - [Installation](#installation)
 - [Commands](#commands)
@@ -14,12 +14,14 @@ Search and preview file/symbol under cursor in the floating window.
 ## Rationale
 
 File searching is initially inspired by vim's `gf`. It fundamentally works by
-invoking the build-in function `findfile` to perform upward (up to the root directory) 
+invoking the build-in function `findfile` to perform upward (up to the root directory)
 and downward searching but asynchronously. So it will never block your actions.
 
-Symbol searching basically depends on pre-generated tag files. Besides, the plugin 
+Symbol searching basically depends on pre-generated tag files. Besides, the plugin
 can also use LSP for searching symbols. Therefore it would be better to have an LSP
 client (only support [coc.nvim](https://github.com/neoclide/coc.nvim) by now) installed.
+
+Word searching will search for the `<cword>` in the current buffer (not implemented yet).
 
 ## Installation
 
@@ -31,11 +33,11 @@ Only works in NVIM >= 0.4.3
 
 ## Commands
 
-- `:SkylightPreview`
+- `:Skylight [file|tag|word]` for previewing
 
-- `:SkylightJumpTo`
+- `:Skylight! [file|tag|word]` for jumping to
 
-NOTE: Both commands can also be used in visual mode, e.g., `'<,'>:SkylightPreview`.
+NOTE: this command can also be used in visual mode, e.g., `'<,'>:Skylight! file`.
 
 ## Options
 
@@ -70,7 +72,7 @@ NOTE: Both commands can also be used in visual mode, e.g., `'<,'>:SkylightPrevie
 
 - **`g:skylight_jump_command`**
 
-  Type `String`. Command used for `:SkylightJumpTo`.
+  Type `String`. Command used for `:Skylight!`.
 
   Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`.
 
@@ -86,8 +88,10 @@ NOTE: Both commands can also be used in visual mode, e.g., `'<,'>:SkylightPrevie
 
 ```vim
 " Configuration example
-nnoremap <silent>       go    :SkylightJumpTo<CR>
-nnoremap <silent>       gp    :SkylightPreview<CR>
+nnoremap <silent>       gp    :Skylight file<CR>
+vnoremap <silent>       gp    :Skylight file<CR>
+nnoremap <silent>       go    :Skylight! file<CR>
+vnoremap <silent>       go    :Skylight! file<CR>
 ```
 
 The following mappings can be used for scrolling floating widow.

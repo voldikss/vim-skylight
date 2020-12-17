@@ -41,10 +41,10 @@ function! skylight#preview(filename, lnum, cmd) abort
   call skylight#float#locate(winid, a:lnum, a:cmd)
 endfunction
 
-function! skylight#start(action, visualmode, range) abort
+function! skylight#start(bang, visualmode, range, type) abort
   let text = ''
   if a:visualmode == 'v' && a:range == 2
     let text = skylight#util#get_selected_text()
   endif
-  call skylight#search#start(text, a:action)
+  call skylight#search#start(text, a:bang, a:type)
 endfunction
