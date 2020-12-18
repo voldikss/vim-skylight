@@ -98,9 +98,9 @@ endfunction
 
 function! s:win_execute(winid, command) abort
   let curr = nvim_get_current_win()
-  noa keepalt call nvim_set_current_win(a:winid)
+  noa keepalt call win_gotoid(a:winid)
   exec a:command
-  noa keepalt call nvim_set_current_win(curr)
+  noa keepalt call win_gotoid(curr)
 endfunction
 
 function! s:win_setview(winid, topline, lnum) abort
