@@ -33,11 +33,18 @@ Only works in NVIM >= 0.4.3
 
 ## Commands
 
-- `:Skylight [file|tag|word]` for previewing
+- `:Skylight` for previewing
 
-- `:Skylight! [file|tag|word]` for jumping to
+  - `:Skylight file` regard the text under cursor as a filepath and try
+    performing previewing
+  - `:Skylight tag` regard the text under cursor as a symbol and try
+    performing previewing
+  - `:Skylight` firstly regard the text as a filepath, if failing to preview
+    then treat it as a symbol and preview again
 
-NOTE: this command can also be used in visual mode, e.g., `'<,'>:Skylight! file`.
+- `:Skylight!` for jumping to. Arguments is similar to `:Skylight`
+
+NOTE: this command can also be used with a range, e.g., visual select and `'<,'>:Skylight! file`.
 
 ## Options
 

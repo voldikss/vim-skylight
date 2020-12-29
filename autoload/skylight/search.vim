@@ -4,22 +4,32 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-let g:skylight#search#succeed = 0
+let s:success = 0
+
+function! skylight#search#get_status() abort
+  return s:success
+endfunction
+
+function! skylight#search#set_status(status) abort
+  let s:success = a:status
+endfunction
 
 function! skylight#search#start(pattern, bang, type) abort
-  let g:skylight#search#succeed = 0
+  call skylight#search#set_status(0)
 
-  if a:type == 'file'
+  if !empty(a:type)
+    call skylight#mode#{a:type}#search(a:pattern, a:bang)
+  else
     call skylight#mode#file#search(a:pattern, a:bang)
-  elseif a:type == 'tag'
     call skylight#mode#tag#search(a:pattern, a:bang)
-  elseif a:type == 'word'
-    call skylight#mode#word#search(a:pattern, a:bang)
   endif
 endfunction
 
 function! skylight#search#callback(filename, lnum, cmd, bang) abort
-  let g:skylight#search#succeed = 1
+  if skylight#search#get_status() == 1
+    return
+  endif
+  call skylight#search#set_status(1)
 
   if empty(a:filename) || !filereadable(a:filename)
     call skylight#util#show_msg('File or tag not found')

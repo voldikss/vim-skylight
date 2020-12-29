@@ -65,7 +65,7 @@ function! skylight#mode#file#search(pattern, bang) abort
 endfunction
 
 function! s:stop_findfile() abort
-  if !g:skylight#search#succeed
+  if skylight#search#get_status() != 1
     call skylight#util#show_msg('Stop searching due to timeout', 'info')
   endif
   call skylight#async#close()

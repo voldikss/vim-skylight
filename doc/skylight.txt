@@ -56,11 +56,16 @@ Commands ~
 
 -------------------------------------------------------------------------------
                                                               *Skylight*
-:Skylight[!]
+- `:Skylight` for previewing
 
-- `:Skylight [file|tag|word]` for previewing
+  - `:Skylight file` regard the text under cursor as a filepath and try
+    performing previewing
+  - `:Skylight tag` regard the text under cursor as a symbol and try
+    performing previewing
+  - `:Skylight` firstly regard the text as a filepath, if failing to preview
+    then treat it as a symbol and preview again
 
-- `:Skylight! [file|tag|word]` for jumping to
+- `:Skylight!` for jumping to. Arguments is similar to `:Skylight`
 
 ===============================================================================
                                                              *skylight-options*
