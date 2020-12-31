@@ -4,7 +4,7 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! skylight#mode#file#search(pattern, bang) abort
+function! skylight#mode#file#search(pattern) abort
   let lnumpat = '\(:\|(\||\)\zs\d\+\ze'
   if !empty(a:pattern)
     let pattern = a:pattern
@@ -20,7 +20,7 @@ function! skylight#mode#file#search(pattern, bang) abort
   let lnum = empty(lnumstr) ? -1 : str2nr(lnumstr)
 
   if filereadable(filename)
-    call skylight#search#callback(filename, lnum, '', a:bang)
+    call skylight#search#callback([{'filename': filename, 'lnum': lnum, 'cmd': ''}])
     return
   endif
 
@@ -53,10 +53,9 @@ function! skylight#mode#file#search(pattern, bang) abort
               \ path
               \ ),
             \ printf(
-              \ 'call rpcnotify(1, "vim_call_function", "skylight#search#callback", [F(), "%s", "%s", "%s"])',
+              \ 'call rpcnotify(1, "vim_call_function", "skylight#search#callback", [[#{filename: F(), lnum: "%s", cmd: "%s"}]])',
               \ -1,
               \ '',
-              \ a:bang
               \ ),
             \ 'quit!'
           \ ]

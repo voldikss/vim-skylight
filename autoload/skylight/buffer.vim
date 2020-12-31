@@ -27,6 +27,7 @@ endfunction
 
 function! skylight#buffer#clear_highlight() abort
   if s:ns_id == -1 | return | endif
+  if !bufexists(s:bufnr) | return | endif
   call nvim_buf_clear_namespace(s:bufnr, s:ns_id, 0, -1)
   let s:ns_id = -1
 endfunction
@@ -43,7 +44,6 @@ endfunction
 
 function! skylight#buffer#create_scratch_buf(...) abort
   let bufnr = nvim_create_buf(v:false, v:true)
-  call nvim_buf_set_option(bufnr, 'buftype', 'nofile')
   call nvim_buf_set_option(bufnr, 'buftype', 'nofile')
   call nvim_buf_set_option(bufnr, 'bufhidden', 'wipe')
   call nvim_buf_set_option(bufnr, 'swapfile', v:false)

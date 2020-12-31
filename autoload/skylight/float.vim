@@ -111,35 +111,31 @@ function! skylight#float#locate(winid, lnum, cmd) abort
   noautocmd call win_gotoid(a:winid)
   execute 'doautocmd filetypedetect BufNewFile'
   if a:lnum > -1 || !empty(a:cmd)
-    if a:lnum > -1
-      noautocmd execute 'keepjumps ' . a:lnum
-    else
-      silent! execute a:cmd
-    endif
+    noautocmd execute 'keepjumps ' . (a:lnum > -1 ? a:lnum : a:cmd)
     let lnum = line('.')
-    call skylight#buffer#add_highlight(a:lnum)
+    call skylight#buffer#add_highlight(lnum)
   endif
   augroup refresh_scroll_bar
     autocmd!
     execute printf(
-      \ 'autocmd CursorMoved <buffer=%s> call skylight#cocf#refresh_scroll_bar(%s)',
-      \ nvim_win_get_buf(a:winid),
-      \ a:winid
-      \ )
+          \ 'autocmd CursorMoved <buffer=%s> call skylight#cocf#refresh_scroll_bar(%s)',
+          \ nvim_win_get_buf(a:winid),
+          \ a:winid
+          \ )
   augroup END
   noautocmd wincmd p
 endfunction
 
 function! skylight#float#open(bufnr, configs) abort
   let [
-    \ a:configs.row,
-    \ a:configs.col,
-    \ a:configs.anchor
-  \ ] = s:calculate_float_pos(
-    \ a:configs.width,
-    \ a:configs.height,
-    \ a:configs.position
-  \ )
+        \ a:configs.row,
+        \ a:configs.col,
+        \ a:configs.anchor
+        \ ] = s:calculate_float_pos(
+        \ a:configs.width,
+        \ a:configs.height,
+        \ a:configs.position
+        \ )
   let winid = s:nvim_create_skylight_win(a:bufnr, a:configs)
   call s:nvim_create_scroll_win(winid, a:configs)
   call s:nvim_create_border_win(winid, a:configs)
@@ -150,14 +146,14 @@ endfunction
 let s:winid = -1
 function! s:nvim_create_skylight_win(bufnr, configs) abort
   let options = {
-    \ 'relative': 'editor',
-    \ 'anchor': a:configs.anchor,
-    \ 'row': a:configs.row + (a:configs.anchor[0] == 'N' ? 1 : -1),
-    \ 'col': a:configs.col + (a:configs.anchor[1] == 'W' ? 1 : -2),
-    \ 'width': a:configs.width - 3,
-    \ 'height': a:configs.height - 2,
-    \ 'style':'minimal',
-    \ }
+        \ 'relative': 'editor',
+        \ 'anchor': a:configs.anchor,
+        \ 'row': a:configs.row + (a:configs.anchor[0] == 'N' ? 1 : -1),
+        \ 'col': a:configs.col + (a:configs.anchor[1] == 'W' ? 1 : -2),
+        \ 'width': a:configs.width - 3,
+        \ 'height': a:configs.height - 2,
+        \ 'style':'minimal',
+        \ }
   let winid = nvim_open_win(a:bufnr, v:false, options)
   call nvim_win_set_option(winid, 'number', v:true)
   call nvim_win_set_option(winid, 'signcolumn', 'no')
@@ -168,15 +164,15 @@ endfunction
 let s:bd_winid = -1
 function! s:nvim_create_border_win(winid, configs) abort
   let bd_options = {
-    \ 'relative': 'editor',
-    \ 'anchor': a:configs.anchor,
-    \ 'row': a:configs.row,
-    \ 'col': a:configs.col,
-    \ 'width': a:configs.width,
-    \ 'height': a:configs.height,
-    \ 'focusable': v:false,
-    \ 'style':'minimal',
-    \ }
+        \ 'relative': 'editor',
+        \ 'anchor': a:configs.anchor,
+        \ 'row': a:configs.row,
+        \ 'col': a:configs.col,
+        \ 'width': a:configs.width,
+        \ 'height': a:configs.height,
+        \ 'focusable': v:false,
+        \ 'style':'minimal',
+        \ }
   let bd_bufnr = skylight#buffer#create_border(a:configs)
   let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
   call nvim_win_set_option(bd_winid, 'winhl', 'Normal:SkylightBorder')
@@ -188,14 +184,14 @@ endfunction
 let s:sb_winid = -1
 function! s:nvim_create_scroll_win(winid, configs) abort
   let options = {
-    \ 'relative': 'editor',
-    \ 'anchor': a:configs.anchor,
-    \ 'row': a:configs.row + (a:configs.anchor[0] == 'N' ? 1 : -1),
-    \ 'col': a:configs.col + (a:configs.anchor[1] == 'W' ? (a:configs.width-2) : -1),
-    \ 'width': 1,
-    \ 'height': a:configs.height - 2,
-    \ 'style': 'minimal',
-    \ }
+        \ 'relative': 'editor',
+        \ 'anchor': a:configs.anchor,
+        \ 'row': a:configs.row + (a:configs.anchor[0] == 'N' ? 1 : -1),
+        \ 'col': a:configs.col + (a:configs.anchor[1] == 'W' ? (a:configs.width-2) : -1),
+        \ 'width': 1,
+        \ 'height': a:configs.height - 2,
+        \ 'style': 'minimal',
+        \ }
   let sb_bufnr = skylight#buffer#create_scratch_buf(repeat([' '], a:configs.height - 2))
   let sb_winid = nvim_open_win(sb_bufnr, v:false, options)
   call nvim_win_set_var(a:winid, 'scroll_winid', sb_winid)
@@ -216,4 +212,42 @@ function! skylight#float#scroll(forward, ...) abort
     call skylight#cocf#scroll_win(s:winid, a:forward, amount)
   endif
   return mode() =~ '^i' || mode() ==# 'v' ? "" : "\<Ignore>"
+endfunction
+
+function! skylight#float#create_menu(lines, details) abort
+  let capacity = &columns / 2
+  let maxwidth = 0
+  for idx in range(len(a:lines))
+    let linewidth = len(a:lines[idx])
+    if linewidth > capacity
+      let a:lines[idx] = '...' . a:lines[idx][linewidth-capacity+3:]
+      let linewidth = capacity
+    endif
+    let maxwidth = max([maxwidth, linewidth])
+  endfor
+
+  let bufnr = skylight#buffer#create_scratch_buf(a:lines)
+  call nvim_buf_set_var(bufnr, 'skylight_menu_details', a:details)
+  call nvim_buf_set_option(bufnr, 'filetype', 'skylightmenu')
+
+  let options = {
+        \ 'width': maxwidth + 1,
+        \ 'height': len(a:lines),
+        \ 'relative': 'editor',
+        \ 'style': 'minimal',
+        \}
+  let [
+        \ options.row,
+        \ options.col,
+        \ options.anchor
+        \ ] = s:calculate_float_pos(
+        \ options.width,
+        \ options.height,
+        \ 'auto'
+        \ )
+  let winid = nvim_open_win(bufnr, v:true, options)
+  call nvim_win_set_option(winid, 'foldcolumn', '1')
+  call nvim_win_set_option(winid, 'cursorline', v:true)
+  call nvim_win_set_option(winid, 'winhl', 'FoldColumn:PmenuSel,Normal:Pmenu,CursorLine:PmenuSel')
+  call nvim_win_set_cursor(winid, [1, 0])
 endfunction

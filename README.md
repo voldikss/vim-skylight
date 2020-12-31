@@ -33,16 +33,19 @@ Only works in NVIM >= 0.4.3
 
 ## Commands
 
-- `:Skylight` for previewing
-
-  - `:Skylight file` regard the text under cursor as a filepath and try
-    performing previewing
-  - `:Skylight tag` regard the text under cursor as a symbol and try
-    performing previewing
-  - `:Skylight` firstly regard the text as a filepath, if failing to preview
+- `:Skylight [...]` search and open a drop-down menu to display the results
+  - `:Skylight file` regard the text under cursor as a filepath and search
+  - `:Skylight tag` regard the text under cursor as a symbol and search
+  - `:Skylight` firstly regard the text as a filepath, if failing to search
     then treat it as a symbol and preview again
 
-- `:Skylight!` for jumping to. Arguments is similar to `:Skylight`
+In the drop-down menu, you can use:
+
+- `j` or `k` to move and perform live previewing
+- `<CR>` for jumping to
+- `<Esc>` or `q` for closing
+- `h` or `l` to close the menu quickly
+- `j` or `k` to close the menu quickly if there is only one entry
 
 NOTE: this command can also be used with a range, e.g., visual select and `'<,'>:Skylight! file`.
 
@@ -140,6 +143,13 @@ hidden directories, I am considering using another suitable file-finder cli
 tool for the plugin but this will not come out in the short term.
 
 ## Screenshots
+
+Notice: some gifs might be outdated (e.g., the commands `:SkylightPreview`
+displayed in some gifs).
+
+- Demo
+
+![](https://user-images.githubusercontent.com/20282795/103416345-341cb500-4bc1-11eb-8010-fd4daef594b9.gif)
 
 - Preview files from quickfix window
 

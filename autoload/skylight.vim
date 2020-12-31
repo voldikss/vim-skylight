@@ -4,25 +4,25 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! skylight#jumpto(filename, lnum, cmd) abort
+function! skylight#jumpto(location) abort
   if &ft=='floaterm' | wincmd c | endif
   silent! execute printf('%s %s | %s',
     \ g:skylight_jump_command,
-    \ a:filename,
-    \ a:lnum > -1 ? a:lnum : a:cmd
+    \ a:location.filename,
+    \ a:location.lnum > -1 ? a:location.lnum : a:location.cmd
     \ )
 endfunction
 
-function! skylight#preview(filename, lnum, cmd) abort
+function! skylight#preview(location) abort
   call skylight#float#close()
-  let bufnr = skylight#buffer#load_buf(a:filename)
+  let bufnr = skylight#buffer#load_buf(a:location.filename)
 
   let config = {
     \ 'width': g:skylight_width,
     \ 'height': g:skylight_height,
     \ 'position': g:skylight_position,
     \ 'borderchars': g:skylight_borderchars,
-    \ 'title': a:filename,
+    \ 'title': a:location.filename,
     \ }
   if type(config.width) == v:t_float
     let config.width *= &columns
@@ -38,13 +38,13 @@ function! skylight#preview(filename, lnum, cmd) abort
     let config.title = '...' . config.title[title_width-capacity+3:]
   endif
   let winid = skylight#float#open(bufnr, config)
-  call skylight#float#locate(winid, a:lnum, a:cmd)
+  call skylight#float#locate(winid, a:location.lnum, a:location.cmd)
 endfunction
 
-function! skylight#start(bang, visualmode, range, type) abort
+function! skylight#start(visualmode, range, type) abort
   let text = ''
   if a:visualmode == 'v' && a:range == 2
     let text = skylight#util#get_selected_text()
   endif
-  call skylight#search#start(text, a:bang, a:type)
+  call skylight#search#start(text, a:type)
 endfunction

@@ -4,6 +4,6 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function skylight#mode#word#search(pattern, bang) abort
+function skylight#mode#word#search(pattern) abort
   call skylight#util#show_msg('Not implemented yet', 'warning')
 endfunction
