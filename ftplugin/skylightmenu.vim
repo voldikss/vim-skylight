@@ -12,9 +12,10 @@ let s:block_restore_cursor = v:false
 
 augroup skylight_menu
   autocmd!
-  autocmd CursorMoved <buffer> if s:menu_live_preview
-        \| call s:preview()
-        \| endif
+  autocmd CursorMoved <buffer>
+        \ if s:menu_live_preview || len(s:menu_details) == 1 |
+          \ call s:preview() |
+        \ endif
   autocmd BufWipeout <buffer> call s:restore_cursor()
 augroup END
 

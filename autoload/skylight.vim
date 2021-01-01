@@ -5,7 +5,6 @@
 " ============================================================================
 
 function! skylight#jumpto(location) abort
-  if &ft=='floaterm' | wincmd c | endif
   silent! execute printf('%s %s | %s',
     \ g:skylight_jump_command,
     \ a:location.filename,

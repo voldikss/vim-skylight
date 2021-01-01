@@ -56,19 +56,28 @@ Commands ~
 
 -------------------------------------------------------------------------------
                                                               *Skylight*
-- `:Skylight [...]` search and open a drop-down menu to display the results
+
+Skylight~
+
+`:Skylight[!] [...]` search and open a drop-down menu to display the results
+
+- If `!` is given, perform live previewing for multiple entries
+- If use with an optional argument:
   - `:Skylight file` regard the text under cursor as a filepath and search
   - `:Skylight tag` regard the text under cursor as a symbol and search
-  - `:Skylight` firstly regard the text as a filepath, if failing to search
-    then treat it as a symbol and preview again
+- If without arguments (i.e., `:Skylight`), it firstly suppose the text is a
+  filename and search. If failing to search then treat the text as a symbol
+  and search again
 
-In the drop-down menu, you can use:
+- In the drop-down menu, you can use:
+  - `j` or `k` to move (and perform live previewing if the menu is opened by `: Skylight!`)
+  - `<CR>` for previewing or jumping to if the menu is opened by `: Skylight!`)
+  - `<Esc>` or `q` for closing
+  - `h` or `l` to close the menu quickly
+  - `j` or `k` will close the menu if there is only one entry
+  - number keys(`1`, `2`, ...) to quickly jump to the corresponding entry
 
-- `j` or `k` to move and perform live previewing
-- `<CR>` for jumping to
-- `<Esc>` or `q` for closing
-- `h` or `l` to close the menu quickly
-- `j` or `k` to close the menu quickly if there is only one entry
+This command can also be used with a range, e.g., visual select and `'<,'>:Skylight! file`.
 
 ===============================================================================
                                                              *skylight-options*

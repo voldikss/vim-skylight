@@ -35,7 +35,7 @@ Only works in NVIM >= 0.4.3
 
 #### `:Skylight[!] [...]` search and open a drop-down menu to display the results
 
-- If `!` is given, perform live previewing
+- If `!` is given, perform live previewing for multiple entries
 - If use with an optional argument:
   - `:Skylight file` regard the text under cursor as a filepath and search
   - `:Skylight tag` regard the text under cursor as a symbol and search
@@ -51,7 +51,7 @@ Only works in NVIM >= 0.4.3
   - `j` or `k` will close the menu if there is only one entry
   - number keys(`1`, `2`, ...) to quickly jump to the corresponding entry
 
-NOTE: this command can also be used with a range, e.g., visual select and `'<,'>:Skylight! file`.
+This command can also be used with a range, e.g., visual select and `'<,'>:Skylight! file`.
 
 ## Options
 
