@@ -2,6 +2,8 @@
 
 Search and preview file/symbol/word under cursor in the floating window.
 
+![](https://user-images.githubusercontent.com/20282795/103437535-c2497780-4c63-11eb-8e21-82a9c23ec29b.png)
+
 - [Installation](#installation)
 - [Commands](#commands)
 - [Options](#options)
@@ -9,7 +11,7 @@ Search and preview file/symbol/word under cursor in the floating window.
 - [Keymaps](#keymaps)
 - [Highlights](#highlights)
 - [Why](#why)
-- [Screenshots](#screenshots)
+- [More demos](#demos)
 
 ## Rationale
 
@@ -144,7 +146,7 @@ downward searching. That is because vim's file searching doesn't include
 hidden directories, I am considering using another suitable file-finder cli
 tool for the plugin but this will not come out in the short term.
 
-## Screenshots
+## Demos
 
 - with live preview
   ![](https://user-images.githubusercontent.com/20282795/103435742-47299680-4c4e-11eb-8428-a76a254a9935.gif)
