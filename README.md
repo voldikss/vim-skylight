@@ -86,7 +86,7 @@ NOTE: this command can also be used with a range, e.g., visual select and `'<,'>
 
 - **`g:skylight_jump_command`**
 
-  Type `String`. Command used for `:Skylight!`.
+  Type `String`. Command used for jumping to
 
   Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`.
 
@@ -102,10 +102,8 @@ NOTE: this command can also be used with a range, e.g., visual select and `'<,'>
 
 ```vim
 " Configuration example
-nnoremap <silent>       gp    :Skylight file<CR>
-vnoremap <silent>       gp    :Skylight file<CR>
-nnoremap <silent>       go    :Skylight! file<CR>
-vnoremap <silent>       go    :Skylight! file<CR>
+nnoremap <silent>       gp    :Skylight!<CR>
+vnoremap <silent>       gp    :Skylight!<CR>
 ```
 
 The following mappings can be used for scrolling floating widow.
