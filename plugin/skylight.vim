@@ -16,5 +16,5 @@ let g:skylight_jump_command = get(g:, 'skylight_jump_command', 'edit')
 
 hi def link SkylightBorder Normal
 
-command! -range -nargs=* -complete=customlist,skylight#cmdline#complete
-      \ Skylight call skylight#start(visualmode(), <range>, <q-args>)
+command! -range -bang -nargs=* -complete=customlist,skylight#cmdline#complete
+      \ Skylight call skylight#start(<q-args>, visualmode(), <range>, <bang>0)

@@ -31,21 +31,25 @@ Plug 'voldikss/vim-skylight'
 
 Only works in NVIM >= 0.4.3
 
-## Commands
+## Usage
 
-- `:Skylight [...]` search and open a drop-down menu to display the results
+#### `:Skylight[!] [...]` search and open a drop-down menu to display the results
+
+- If `!` is given, perform live previewing
+- If use with an optional argument:
   - `:Skylight file` regard the text under cursor as a filepath and search
   - `:Skylight tag` regard the text under cursor as a symbol and search
-  - `:Skylight` firstly regard the text as a filepath, if failing to search
-    then treat it as a symbol and preview again
+- If without arguments (i.e., `:Skylight`), it firstly suppose the text is a
+  filename and search. If failing to search then treat the text as a symbol
+  and search again
 
-In the drop-down menu, you can use:
-
-- `j` or `k` to move and perform live previewing
-- `<CR>` for jumping to
-- `<Esc>` or `q` for closing
-- `h` or `l` to close the menu quickly
-- `j` or `k` to close the menu quickly if there is only one entry
+- In the drop-down menu, you can use:
+  - `j` or `k` to move (and perform live previewing if the menu is opened by `: Skylight!`)
+  - `<CR>` for previewing or jumping to if the menu is opened by `: Skylight!`)
+  - `<Esc>` or `q` for closing
+  - `h` or `l` to close the menu quickly
+  - `j` or `k` will close the menu if there is only one entry
+  - number keys(`1`, `2`, ...) to quickly jump to the corresponding entry
 
 NOTE: this command can also be used with a range, e.g., visual select and `'<,'>:Skylight! file`.
 
@@ -144,21 +148,14 @@ tool for the plugin but this will not come out in the short term.
 
 ## Screenshots
 
-Notice: some gifs might be outdated (e.g., the commands `:SkylightPreview`
-displayed in some gifs).
+- with live preview
+  ![](https://user-images.githubusercontent.com/20282795/103435742-47299680-4c4e-11eb-8428-a76a254a9935.gif)
 
-- Demo
+- without live preview
+  ![](https://user-images.githubusercontent.com/20282795/103435744-498bf080-4c4e-11eb-8aad-c4ee58923dad.gif)
 
-![](https://user-images.githubusercontent.com/20282795/103416345-341cb500-4bc1-11eb-8010-fd4daef594b9.gif)
+- quickfix
+  ![](https://user-images.githubusercontent.com/20282795/103435745-4a248700-4c4e-11eb-943f-4aa78fb801f9.gif)
 
-- Preview files from quickfix window
-
-![](https://user-images.githubusercontent.com/20282795/100506133-f4207780-31a7-11eb-9c69-30e8e254a2bb.gif)
-
-- Preview symbol
-
-![](https://user-images.githubusercontent.com/20282795/100506082-ef5bc380-31a7-11eb-9618-fd37ad03f7cb.gif)
-
-- Preview files from terminal window
-
-![](https://user-images.githubusercontent.com/20282795/100506148-f5ea3b00-31a7-11eb-820e-b2f6dcc3840e.gif)
+- terminal
+  ![](https://user-images.githubusercontent.com/20282795/103435599-d7b2a780-4c4b-11eb-94c6-a05398145c2f.gif)

@@ -5,6 +5,7 @@
 " ============================================================================
 
 let s:success = 0
+let s:live_preview = 0
 
 function! skylight#search#get_status() abort
   return s:success
@@ -14,7 +15,8 @@ function! skylight#search#set_status(status) abort
   let s:success = a:status
 endfunction
 
-function! skylight#search#start(pattern, type) abort
+function! skylight#search#start(pattern, type, live_preview) abort
+  let s:live_preview = a:live_preview
   call skylight#search#set_status(0)
 
   if !empty(a:type)
@@ -34,9 +36,15 @@ function! skylight#search#callback(locations) abort
   let locations = filter(copy(a:locations), { _,v -> !empty(v.filename) && filereadable(v.filename) })
   if empty(locations)
     call skylight#util#show_msg('File or tag not found')
+    return
   endif
 
   let filenames = map(copy(locations), { _,v -> v['filename'] })
-  call skylight#float#create_menu(filenames, locations)
+  let filenames = map(filenames, { _,v -> fnamemodify(v, ':~:.') })
+  let maxwidth = max(map(copy(filenames), { _,v -> len(v) }))
+  if maxwidth > &columns / 2
+    call map(filenames, { _,v -> pathshorten(v) })
+  endif
+  call skylight#float#create_menu(filenames, s:live_preview, locations)
   call timer_start(10, { -> execute('doautocmd skylight_menu CursorMoved') })
 endfunction

@@ -85,7 +85,7 @@ function! s:register_autocmd() abort
 endfunction
 
 function! skylight#float#close() abort
-  if win_getid() == s:winid | return | endif
+  if nvim_get_current_win() == s:winid | return | endif
   call skylight#buffer#clear_highlight()
   if s:win_exists(s:winid)
     call nvim_win_close(s:winid, v:true)
@@ -108,7 +108,7 @@ function! skylight#float#close() abort
 endfunction
 
 function! skylight#float#locate(winid, lnum, cmd) abort
-  noautocmd call win_gotoid(a:winid)
+  noautocmd call nvim_set_current_win(a:winid)
   execute 'doautocmd filetypedetect BufNewFile'
   if a:lnum > -1 || !empty(a:cmd)
     noautocmd execute 'keepjumps ' . (a:lnum > -1 ? a:lnum : a:cmd)
@@ -214,24 +214,16 @@ function! skylight#float#scroll(forward, ...) abort
   return mode() =~ '^i' || mode() ==# 'v' ? "" : "\<Ignore>"
 endfunction
 
-function! skylight#float#create_menu(lines, details) abort
-  let capacity = &columns / 2
-  let maxwidth = 0
-  for idx in range(len(a:lines))
-    let linewidth = len(a:lines[idx])
-    if linewidth > capacity
-      let a:lines[idx] = '...' . a:lines[idx][linewidth-capacity+3:]
-      let linewidth = capacity
-    endif
-    let maxwidth = max([maxwidth, linewidth])
-  endfor
-
+function! skylight#float#create_menu(lines, live_preview, details) abort
+  call map(a:lines, { k,v -> printf('%s. %s', k+1, v) })
   let bufnr = skylight#buffer#create_scratch_buf(a:lines)
-  call nvim_buf_set_var(bufnr, 'skylight_menu_details', a:details)
+  call nvim_buf_set_var(bufnr, 'menu_live_preview', a:live_preview)
+  call nvim_buf_set_var(bufnr, 'menu_details', a:details)
+  call nvim_buf_set_var(bufnr, 'menu_saved_winid', nvim_get_current_win())
   call nvim_buf_set_option(bufnr, 'filetype', 'skylightmenu')
 
   let options = {
-        \ 'width': maxwidth + 1,
+        \ 'width': max(map(copy(a:lines), { _,v -> len(v) })) + 1,
         \ 'height': len(a:lines),
         \ 'relative': 'editor',
         \ 'style': 'minimal',

@@ -33,18 +33,18 @@ function! skylight#preview(location) abort
     let config.height = float2nr(config.height)
   endif
   let title_width = strdisplaywidth(config.title)
-  let capacity = config.width - 2
-  if title_width > capacity
-    let config.title = '...' . config.title[title_width-capacity+3:]
+  let maxwidth = config.width - 2
+  if title_width > maxwidth
+    let config.title = '...' . config.title[title_width-maxwidth+3:]
   endif
   let winid = skylight#float#open(bufnr, config)
   call skylight#float#locate(winid, a:location.lnum, a:location.cmd)
 endfunction
 
-function! skylight#start(visualmode, range, type) abort
+function! skylight#start(type, visualmode, range, live_preview) abort
   let text = ''
   if a:visualmode == 'v' && a:range == 2
     let text = skylight#util#get_selected_text()
   endif
-  call skylight#search#start(text, a:type)
+  call skylight#search#start(text, a:type, a:live_preview)
 endfunction
