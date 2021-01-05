@@ -5,7 +5,7 @@
 " ============================================================================
 
 function skylight#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
-  let candidates = ['file', 'tag', 'word']
+  let candidates = ['file', 'symbol', 'word']
   if a:arg_lead == ''
     return candidates
   else

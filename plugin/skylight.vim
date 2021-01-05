@@ -18,3 +18,9 @@ hi def link SkylightBorder Normal
 
 command! -range -bang -nargs=* -complete=customlist,skylight#cmdline#complete
       \ Skylight call skylight#start(<q-args>, visualmode(), <range>, <bang>0)
+
+augroup CocSkylightLocation
+  autocmd!
+  let g:coc_enable_locationlist = 0
+  autocmd User CocLocationsChange call skylight#mode#symbol#on_coclocations_change()
+augroup END

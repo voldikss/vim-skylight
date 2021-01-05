@@ -34,13 +34,19 @@ Search and preview file/symbol under cursor in the floating window.
                                                            *skylight-rationale*
 Rationale ~
 
-File searching is initially inspired by vim' |gf|. It fundamentally works by
-invoking the build-in function |findfile| but asynchronously. Therefore it
-will never block your actions.
+File searching is initially inspired by vim's |gf|. It fundamentally works by
+invoking the build-in function |findfile()| to perform upward (up to the root
+directory) and downward searching but asynchronously. So it will never block
+your actions.
 
-Symbol searching basically depends on pre-generated tag files. Other than using
-tags, the plugin can also use LSP for searching symbols. Therefore it would be
-better to have an LSP client (only support coc.nvim [1] by now) installed.
+Symbol searching basically invokes |taglist()| function asynchronously to
+search for the pattern from pre-generated tag files. In addition, the plugin
+can also use LSP for searching symbols (both definition and references).
+Therefore it would be better to have an LSP client (only support [coc.nvim][1]
+by now) installed.
+
+Word searching will search for the |<cword>| in the current buffer (not
+implemented yet).
 
 ===============================================================================
                                                         *skylight-installation*
@@ -64,7 +70,7 @@ Skylight~
 - If `!` is given, perform live previewing for multiple entries
 - If use with an optional argument:
   - `:Skylight file` regard the text under cursor as a filepath and search
-  - `:Skylight tag` regard the text under cursor as a symbol and search
+  - `:Skylight symbol` regard the text under cursor as a symbol and search
 - If without arguments (i.e., `:Skylight`), it firstly suppose the text is a
   filename and search. If failing to search then treat the text as a symbol
   and search again

@@ -16,14 +16,18 @@ Search and preview file/symbol/word under cursor in the floating window.
 ## Rationale
 
 File searching is initially inspired by vim's `gf`. It fundamentally works by
-invoking the build-in function `findfile` to perform upward (up to the root directory)
-and downward searching but asynchronously. So it will never block your actions.
+invoking the build-in function `findfile()` to perform upward (up to the root
+directory) and downward searching but asynchronously. So it will never block
+your actions.
 
-Symbol searching basically depends on pre-generated tag files. Besides, the plugin
-can also use LSP for searching symbols. Therefore it would be better to have an LSP
-client (only support [coc.nvim](https://github.com/neoclide/coc.nvim) by now) installed.
+Symbol searching basically invokes `taglist()` function asynchronously to
+search for the pattern from pre-generated tag files. In addition, the plugin
+can also use LSP for searching symbols (both definition and references).
+Therefore it would be better to have an LSP client (only support [coc.nvim][1]
+by now) installed.
 
-Word searching will search for the `<cword>` in the current buffer (not implemented yet).
+Word searching will search for the `<cword>` in the current buffer (not
+implemented yet).
 
 ## Installation
 
@@ -40,7 +44,7 @@ Only works in NVIM >= 0.4.3
 - If `!` is given, perform live previewing for multiple entries
 - If use with an optional argument:
   - `:Skylight file` regard the text under cursor as a filepath and search
-  - `:Skylight tag` regard the text under cursor as a symbol and search
+  - `:Skylight symbol` regard the text under cursor as a symbol and search
 - If without arguments (i.e., `:Skylight`), it firstly suppose the text is a
   filename and search. If failing to search then treat the text as a symbol
   and search again
@@ -159,3 +163,5 @@ tool for the plugin but this will not come out in the short term.
 
 - terminal
   ![](https://user-images.githubusercontent.com/20282795/103435599-d7b2a780-4c4b-11eb-94c6-a05398145c2f.gif)
+
+[1]: (https://github.com/neoclide/coc.nvim)

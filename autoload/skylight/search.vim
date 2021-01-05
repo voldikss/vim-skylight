@@ -5,7 +5,7 @@
 " ============================================================================
 
 let s:success = 0
-let s:live_preview = 0
+let s:live_preview = 1
 
 function! skylight#search#get_status() abort
   return s:success
@@ -23,7 +23,7 @@ function! skylight#search#start(pattern, type, live_preview) abort
     call skylight#mode#{a:type}#search(a:pattern)
   else
     call skylight#mode#file#search(a:pattern)
-    call skylight#mode#tag#search(a:pattern)
+    call skylight#mode#symbol#search(a:pattern)
   endif
 endfunction
 
@@ -33,9 +33,12 @@ function! skylight#search#callback(locations) abort
   endif
   call skylight#search#set_status(1)
 
-  let locations = filter(copy(a:locations), { _,v -> !empty(v.filename) && filereadable(v.filename) })
+  let locations = filter(
+        \ copy(a:locations),
+        \ { _,v -> !empty(v.filename) && filereadable(v.filename) }
+        \ )
   if empty(locations)
-    call skylight#util#show_msg('File or tag not found')
+    call skylight#util#show_msg('File or symbol not found')
     return
   endif
 

@@ -53,12 +53,12 @@ function! skylight#mode#file#search(pattern) abort
         \ 'quit!'
         \ ]
   call vim.cmd(cmd, 1)
-  call timer_start(5000, { -> s:stop_findfile() })
+  call timer_start(5000, { -> s:stop_findfile(vim) })
 endfunction
 
-function! s:stop_findfile() abort
+function! s:stop_findfile(vim) abort
   if skylight#search#get_status() != 1
-    call skylight#util#show_msg('Stop searching due to timeout', 'info')
+    call skylight#util#show_msg('Stop searching files due to timeout', 'info')
   endif
-  call skylight#async#close()
+  call skylight#async#close(a:vim)
 endfunction

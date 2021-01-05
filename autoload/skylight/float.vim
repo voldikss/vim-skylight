@@ -111,7 +111,7 @@ function! skylight#float#locate(winid, lnum, cmd) abort
   noautocmd call nvim_set_current_win(a:winid)
   execute 'doautocmd filetypedetect BufNewFile'
   if a:lnum > -1 || !empty(a:cmd)
-    noautocmd execute 'keepjumps ' . (a:lnum > -1 ? a:lnum : a:cmd)
+    noautocmd execute 'silent keepjumps ' . (a:lnum > -1 ? a:lnum : a:cmd)
     let lnum = line('.')
     call skylight#buffer#add_highlight(lnum)
   endif
