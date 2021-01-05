@@ -38,7 +38,7 @@ function! skylight#search#callback(locations) abort
         \ { _,v -> !empty(v.filename) && filereadable(v.filename) }
         \ )
   if empty(locations)
-    call skylight#util#show_msg('File or symbol not found')
+    call skylight#util#show_msg('File or symbol not found', 'warning')
     return
   endif
 

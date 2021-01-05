@@ -207,7 +207,7 @@ endfunction
 function! skylight#float#scroll(forward, ...) abort
   let amount = get(a:, 1, 0)
   if !s:win_exists(s:winid)
-    call skylight#util#show_msg('No skylight windows')
+    call skylight#util#show_msg('No skylight windows', 'error')
   else
     call skylight#cocf#scroll_win(s:winid, a:forward, amount)
   endif
