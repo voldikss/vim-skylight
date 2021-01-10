@@ -1,6 +1,6 @@
 # vim-skylight
 
-Search and preview file/symbol/word under cursor in the floating window.
+Search asynchronously and preview file/symbol/word under cursor in the floating window.
 
 ![](https://user-images.githubusercontent.com/20282795/103437535-c2497780-4c63-11eb-8e21-82a9c23ec29b.png)
 
@@ -17,8 +17,8 @@ Search and preview file/symbol/word under cursor in the floating window.
 
 File searching is initially inspired by vim's `gf`. It fundamentally works by
 invoking the build-in function `findfile()` to perform upward (up to the root
-directory) and downward searching but asynchronously. So it will never block
-your actions.
+directory) and downward searching but asynchronously. It will never block your
+actions.
 
 Symbol searching basically invokes `taglist()` function asynchronously to
 search for the pattern from pre-generated tag files. In addition, the plugin
@@ -132,11 +132,11 @@ hi SkylightBorder guibg=orange guifg=cyan
 ## Why
 
 For a long time I was hoping to preview file under cursor in a disposable
-floating window without actually opening it. Then I dug into the web and
-found some awesome projects, which, however, only support previewing files
-that are listed in the quickfix window. What I want is to preview the file
-that occurs anywhere in vim, even those in the builtin terminal window (when I am
-using gdb's `bt` command).
+floating window without actually opening it. Then I dug into the web and found
+some awesome projects, which, however, only support previewing files that are
+listed only in the quickfix window. What I want is to preview the file that is
+given by either relative or absolute path and occurs anywhere in vim, even
+those in the builtin terminal window (when I am using gdb's `bt` command).
 
 The codes were initially buildup in my personal dotfiles. After the whole
 feature was almost implemented, I decided to detach them from the dotfiles and
@@ -149,6 +149,11 @@ Sometimes can not find the files in the hidden folders when performing
 downward searching. That is because vim's file searching doesn't include
 hidden directories, I am considering using another suitable file-finder cli
 tool for the plugin but this will not come out in the short term.
+
+Note that the plugin is developed with pure vimscript. Therefore, until the
+whole file content has been loaded into memory could it be previewed in the
+skylight window, so it's not recommended to perform `:Skylight[!]` on large
+size files as it will cost more time for nvim to open that file.
 
 ## Demos
 

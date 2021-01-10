@@ -28,7 +28,7 @@ Contents ~
                                                         *skylight-introduction*
 Introduction ~
 
-Search and preview file/symbol under cursor in the floating window.
+Search asynchronously and preview file/symbol under cursor in the floating window.
 
 ===============================================================================
                                                            *skylight-rationale*
