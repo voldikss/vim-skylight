@@ -5,6 +5,10 @@
 " ============================================================================
 
 function! skylight#mode#file#search(pattern) abort
+  if skylight#search#get_status() == 1
+    return
+  endif
+
   let lnumpat = '\(:\|(\||\)\zs\d\+\ze'
   if !empty(a:pattern)
     let pattern = a:pattern

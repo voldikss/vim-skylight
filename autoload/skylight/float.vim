@@ -221,6 +221,7 @@ function! skylight#float#create_menu(lines, live_preview, details) abort
   call nvim_buf_set_var(bufnr, 'menu_details', a:details)
   call nvim_buf_set_var(bufnr, 'menu_saved_winid', nvim_get_current_win())
   call nvim_buf_set_option(bufnr, 'filetype', 'skylightmenu')
+  call nvim_buf_set_option(bufnr, 'buftype', 'nofile')
 
   let options = {
         \ 'width': max(map(copy(a:lines), { _,v -> len(v) })) + 1,

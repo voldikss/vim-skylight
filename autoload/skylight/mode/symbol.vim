@@ -5,6 +5,10 @@
 " ============================================================================
 
 function! skylight#mode#symbol#search(pattern) abort
+  if skylight#search#get_status() == 1
+    return
+  endif
+
   let pattern = empty(a:pattern) ? expand('<cword>') : a:pattern
 
   " use coc-action jumpReferences
@@ -57,7 +61,7 @@ let s:override = v:false
 function! s:coc_search() abort
   if exists('g:did_coc_loaded')
     let s:override = v:true
-    call CocActionAsync('jumpReferences')
+    silent! call CocActionAsync('jumpReferences')
   endif
 endfunction
 
