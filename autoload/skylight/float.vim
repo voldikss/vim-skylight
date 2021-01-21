@@ -107,13 +107,11 @@ function! skylight#float#close() abort
   endif
 endfunction
 
-function! skylight#float#locate(winid, lnum, cmd) abort
+function! skylight#float#locate(winid, location) abort
   noautocmd call nvim_set_current_win(a:winid)
   execute 'doautocmd filetypedetect BufNewFile'
-  if a:lnum > -1 || !empty(a:cmd)
-    noautocmd execute 'silent keepjumps ' . (a:lnum > -1 ? a:lnum : a:cmd)
-    let lnum = line('.')
-    call skylight#buffer#add_highlight(lnum)
+  if skylight#buffer#jump(a:location)
+    call skylight#buffer#add_highlight(a:location)
   endif
   augroup refresh_scroll_bar
     autocmd!

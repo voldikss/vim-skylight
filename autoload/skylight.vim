@@ -37,7 +37,7 @@ function! skylight#preview(location) abort
     let config.title = '...' . config.title[title_width-maxwidth+3:]
   endif
   let winid = skylight#float#open(bufnr, config)
-  call skylight#float#locate(winid, a:location.lnum, a:location.cmd)
+  call skylight#float#locate(winid, a:location)
 endfunction
 
 function! skylight#start(type, visualmode, range, live_preview) abort

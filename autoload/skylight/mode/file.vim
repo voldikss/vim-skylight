@@ -21,10 +21,13 @@ function! skylight#mode#file#search(pattern) abort
     let lnumstr = matchstr(getline('.'), pattern . lnumpat)
   endif
   let filename = substitute(pattern, '^\zs\(\~\|\$HOME\)', $HOME, '')
-  let lnum = empty(lnumstr) ? -1 : str2nr(lnumstr)
 
   if filereadable(filename)
-    call skylight#search#callback([{'filename': filename, 'lnum': lnum, 'cmd': ''}])
+    let result = #{filename: filename}
+    if !empty(lnumstr)
+      let result.lnum = str2nr(lnumstr)
+    endif
+    call skylight#search#callback([result])
     return
   endif
 
@@ -52,8 +55,8 @@ function! skylight#mode#file#search(pattern) abort
   let vim = skylight#async#new()
   let cmd = [
         \ printf('let F = findfile("%s", "%s")', filename, path),
-        \ printf('let arg = [#{filename: F, lnum: "%s", cmd: "%s"}]', -1, ''),
-        \ 'call rpcrequest(1, "vim_call_function", "skylight#search#callback", [arg])',
+        \ 'let results = [#{filename: F]',
+        \ 'call rpcrequest(1, "vim_call_function", "skylight#search#callback", [results])',
         \ 'quit!'
         \ ]
   call vim.cmd(cmd, 1)

@@ -23,8 +23,9 @@ function! s:tag_search(pattern) abort
   let vim = skylight#async#new()
   let cmd = [
         \ 'set tags=./tags,tags,.tags,.vim/tags,.vim/.tags',
+        \ printf('let pattern = "%s"', pattern),
         \ printf('let taglists = taglist("%s")', pattern),
-        \ 'call rpcrequest(1, "vim_call_function", "skylight#mode#symbol#tag_search_callback", [taglists])',
+        \ 'call rpcrequest(1, "vim_call_function", "skylight#mode#symbol#tag_search_callback", [pattern, taglists])',
         \ 'quit!'
         \ ]
   call vim.cmd(cmd, 1)
@@ -38,18 +39,17 @@ function! s:stop_taglist(vim) abort
   call skylight#async#close(a:vim)
 endfunction
 
-function! skylight#mode#symbol#tag_search_callback(taglists) abort
+function! skylight#mode#symbol#tag_search_callback(pattern, taglists) abort
   let locations = []
   if !empty(a:taglists)
     for t in a:taglists
-      let location = {}
-      for k in ['filename', 'cmd']
-        let location[k] = t[k]
-      endfor
-      if location['cmd'] =~ '^\d\+$'
-        let location['lnum'] = str2nr(cmd)
-      else
-        let location['lnum'] = -1
+      let location = {
+            \ 'pattern': a:pattern,
+            \ 'filename': t.filename,
+            \ 'cmd': t.cmd,
+            \ }
+      if location.cmd =~ '^\d\+$'
+        let location.lnum = str2nr(cmd)
       endif
       call add(locations, location)
     endfor
@@ -67,7 +67,14 @@ endfunction
 
 function! skylight#mode#symbol#on_coclocations_change() abort
   if s:override
-    let locations = map(g:coc_jump_locations, {_, v -> #{filename: v.filename, lnum: v.lnum, cmd: ''} })
+    let locations = []
+    for loc in g:coc_jump_locations
+      call add(locations, #{
+            \ filename: loc.filename,
+            \ lnum: loc.lnum,
+            \ range: loc.range
+            \ })
+    endfor
     call skylight#search#callback(locations)
   else
     CocList --normal --auto-preview location

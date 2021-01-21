@@ -17,12 +17,32 @@ function! skylight#buffer#load_buf(filename) abort
 endfunction
 
 let s:ns_id = -1
-function! skylight#buffer#add_highlight(lnum) abort
+function! skylight#buffer#add_highlight(location) abort
   let s:ns_id = nvim_create_namespace('skylight')
-  let rowcnt = nvim_buf_line_count(s:bufnr)
-  let lnum = a:lnum - 1
-  if lnum < 1 || lnum > rowcnt | return | endif
-  call nvim_buf_add_highlight(s:bufnr, s:ns_id, 'Search', lnum, 0, -1)
+  let lnum = line('.') - 1
+  let start = 0
+  let end = -1
+  if has_key(a:location, 'pattern')
+    let [_, start, end] = matchstrpos(getline('.'), a:location.pattern)
+  elseif has_key(a:location, 'range')
+    let start = a:location.range.start.character
+    let end = a:location.range.end.character
+  endif
+  call nvim_buf_add_highlight(s:bufnr, s:ns_id, 'Search', lnum, start, end)
+endfunction
+
+function! skylight#buffer#jump(location) abort
+  let jmpcmd = ''
+  if has_key(a:location, 'lnum') && a:location.lnum > -1
+    let jmpcmd = a:location.lnum
+  elseif has_key(a:location, 'cmd') && !empty(a:location.cmd)
+    let jmpcmd = a:location.cmd
+  endif
+  if !empty(jmpcmd)
+    noautocmd execute 'silent keepjumps ' . jmpcmd 
+    return v:true
+  endif
+  return v:false
 endfunction
 
 function! skylight#buffer#clear_highlight() abort

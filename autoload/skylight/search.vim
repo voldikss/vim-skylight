@@ -27,6 +27,12 @@ function! skylight#search#start(pattern, type, live_preview) abort
   endif
 endfunction
 
+" param `locations` includes:
+"  - filename: String
+"  - cmd?: String, used for jumping
+"  - lnum?: Number, used for jumping
+"  - pattern?: String, used for highlighting
+"  - range?: Directory, used for highlighting
 function! skylight#search#callback(locations) abort
   if skylight#search#get_status() == 1
     return
