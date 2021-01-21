@@ -32,7 +32,7 @@ function! skylight#preview(location) abort
     let config.height = float2nr(config.height)
   endif
   let title_width = strdisplaywidth(config.title)
-  let maxwidth = config.width - 2
+  let maxwidth = (config.width - 2) / 2
   if title_width > maxwidth
     let config.title = '...' . config.title[title_width-maxwidth+3:]
   endif
