@@ -45,8 +45,7 @@ can also use LSP for searching symbols (both definition and references).
 Therefore it would be better to have an LSP client (only support [coc.nvim][1]
 by now) installed.
 
-Word searching will search for the |<cword>| in the current buffer (not
-implemented yet).
+Word searching will search for the |<cword>| in the current buffer.
 
 ===============================================================================
                                                         *skylight-installation*
@@ -71,6 +70,7 @@ Skylight~
 - If use with an optional argument:
   - `:Skylight file` regard the text under cursor as a filepath and search
   - `:Skylight symbol` regard the text under cursor as a symbol and search
+  - `:Skylight word` search for the `<cword>` in the current buffer
 - If without arguments (i.e., `:Skylight`), it firstly suppose the text is a
   filename and search. If failing to search then treat the text as a symbol
   and search again
