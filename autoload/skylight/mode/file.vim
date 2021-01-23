@@ -55,7 +55,7 @@ function! skylight#mode#file#search(pattern) abort
   let vim = skylight#async#new()
   let cmd = [
         \ printf('let F = findfile("%s", "%s")', filename, path),
-        \ 'let results = [#{filename: F]',
+        \ 'let results = [#{filename: F}]',
         \ 'call rpcrequest(1, "vim_call_function", "skylight#search#callback", [results])',
         \ 'quit!'
         \ ]
