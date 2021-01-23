@@ -5,10 +5,18 @@
 " ============================================================================
 
 function! skylight#jumpto(location) abort
+  echom string(a:location)
+  if has_key(a:location, 'lnum')
+    let cmd = a:location.lnum
+  elseif has_key(a:location, 'cmd')
+    let cmd = a:location.cmd
+  else
+    let cmd = 'normal! gg0'
+  endif
   silent! execute printf('%s %s | %s',
     \ g:skylight_jump_command,
     \ a:location.filename,
-    \ a:location.lnum > -1 ? a:location.lnum : a:location.cmd
+    \ cmd
     \ )
 endfunction
 
