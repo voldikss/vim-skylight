@@ -239,6 +239,7 @@ function! skylight#float#create_menu(lines, live_preview, details) abort
   let winid = nvim_open_win(bufnr, v:true, options)
   call nvim_win_set_option(winid, 'foldcolumn', '1')
   call nvim_win_set_option(winid, 'cursorline', v:true)
+  call nvim_win_set_option(winid, 'signcolumn', 'no')
   call nvim_win_set_option(winid, 'winhl', 'FoldColumn:PmenuSel,Normal:Pmenu,CursorLine:PmenuSel')
   call nvim_win_set_cursor(winid, [1, 0])
 endfunction
