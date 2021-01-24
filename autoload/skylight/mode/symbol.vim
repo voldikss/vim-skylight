@@ -77,7 +77,10 @@ function! skylight#mode#symbol#on_coclocations_change() abort
     endfor
     call skylight#search#callback(locations)
   else
-    CocList --normal --auto-preview location
+    let autocmd_count = (len(split(execute('autocmd User CocLocationsChange'), '\n')) - 1) / 3 
+    if autocmd_count == 1
+      CocList --normal --auto-preview location
+    endif
   endif
   let s:override = v:false
 endfunction
