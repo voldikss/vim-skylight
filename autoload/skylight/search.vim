@@ -4,15 +4,15 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-let s:success = 0
+let s:finished = 0
 let s:live_preview = 1
 
 function! skylight#search#get_status() abort
-  return s:success
+  return s:finished
 endfunction
 
 function! skylight#search#set_status(status) abort
-  let s:success = a:status
+  let s:finished = a:status
 endfunction
 
 function! skylight#search#start(pattern, type, live_preview) abort

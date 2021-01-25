@@ -33,11 +33,13 @@ function! skylight#mode#file#search(pattern) abort
 
   if isdirectory(filename)
     call skylight#util#show_msg('Can not preview directory', 'warning')
+    call skylight#search#set_status(1)
     return
   endif
 
   if filename =~ '^/' && !filereadable(filename)
     call skylight#util#show_msg('File not found', 'warning')
+    call skylight#search#set_status(1)
     return
   endif
 
