@@ -22,6 +22,19 @@ function! skylight#mode#file#search(pattern) abort
   endif
   let filename = substitute(pattern, '^\zs\(\~\|\$HOME\)', $HOME, '')
 
+  if filename =~ '^/'
+    if filereadable(filename)
+      let result = #{filename: filename}
+      if !empty(lnumstr)
+        let result.lnum = str2nr(lnumstr)
+      endif
+      call skylight#search#callback([result])
+      return
+    else
+      let filename = substitute(filename, '^\zs/\ze', '', '')
+    endif
+  endif
+
   if filereadable(filename)
     let result = #{filename: filename}
     if !empty(lnumstr)
@@ -33,12 +46,6 @@ function! skylight#mode#file#search(pattern) abort
 
   if isdirectory(filename)
     call skylight#util#show_msg('Can not preview directory', 'warning')
-    call skylight#search#set_status(1)
-    return
-  endif
-
-  if filename =~ '^/' && !filereadable(filename)
-    call skylight#util#show_msg('File not found', 'warning')
     call skylight#search#set_status(1)
     return
   endif
