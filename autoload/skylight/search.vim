@@ -27,7 +27,7 @@ function! skylight#search#start(pattern, type, live_preview) abort
   endif
 endfunction
 
-" param `locations` includes:
+" param `locations` is a list of dictionary, which contains:
 "  - filename: String
 "  - cmd?: String, used for jumping
 "  - lnum?: Number, used for jumping

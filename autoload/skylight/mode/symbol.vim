@@ -29,7 +29,7 @@ function! s:tag_search(pattern) abort
         \ 'quit!'
         \ ]
   call vim.cmd(cmd, 1)
-  call timer_start(5000, { -> s:stop_taglist(vim) })
+  call timer_start(3000, { -> s:stop_taglist(vim) })
 endfunction
 
 function! s:stop_taglist(vim) abort
