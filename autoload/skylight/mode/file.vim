@@ -22,17 +22,21 @@ function! skylight#mode#file#search(pattern) abort
   endif
   let filename = substitute(pattern, '^\zs\(\~\|\$HOME\)', $HOME, '')
 
-  if filename =~ '^/'
-    if filereadable(filename)
-      let result = #{filename: filename}
-      if !empty(lnumstr)
-        let result.lnum = str2nr(lnumstr)
-      endif
-      call skylight#search#callback([result])
-      return
-    else
-      let filename = substitute(filename, '^\zs/\ze', '', '')
+  if filereadable(filename)
+    let result = #{filename: filename}
+    if !empty(lnumstr)
+      let result.lnum = str2nr(lnumstr)
     endif
+    call skylight#search#callback([result])
+    return
+  elseif isdirectory(filename)
+    call skylight#util#show_msg('Can not preview directory', 'warning')
+    call skylight#search#set_status(1)
+    return
+  elseif filename =~ '^/'
+    let filename = substitute(filename, '^\zs/\ze', '', '')
+  else
+    " pass
   endif
 
   if filereadable(filename)
@@ -42,18 +46,18 @@ function! skylight#mode#file#search(pattern) abort
     endif
     call skylight#search#callback([result])
     return
-  endif
-
-  if isdirectory(filename)
+  elseif isdirectory(filename)
     call skylight#util#show_msg('Can not preview directory', 'warning')
     call skylight#search#set_status(1)
     return
+  elseif filename =~ '^\(../\|./\)' 
+    " remove `./` and `../`
+    while filename =~ '^\(../\|./\)'
+      let filename = substitute(filename, '^\(../\|./\)', '', 'g')
+    endwhile
+  else
+    " pass
   endif
-
-  " remove `./` and `../`
-  while filename =~ '^\(../\|./\)'
-    let filename = substitute(filename, '^\(../\|./\)', '', 'g')
-  endwhile
 
   let path = '.,**5'
   let root = skylight#path#get_root()
