@@ -249,4 +249,11 @@ function! s:start_prompt()
   endtry
 endfunction
 
+nmap <nowait><buffer><silent> <Esc>  <Plug>(close)
+nmap <nowait><buffer><silent> <Up>   <Plug>(up)
+nmap <nowait><buffer><silent> <Down> <Plug>(down)
+nmap <nowait><buffer><silent> q      <Plug>(close)
+nmap <nowait><buffer><silent> k      <Plug>(up)
+nmap <nowait><buffer><silent> j      <Plug>(down)
+
 call timer_start(100, {->s:start_prompt()})
