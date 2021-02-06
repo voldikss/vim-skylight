@@ -5,7 +5,6 @@
 " ============================================================================
 
 function! skylight#jumpto(location) abort
-  echom string(a:location)
   if has_key(a:location, 'lnum')
     let cmd = a:location.lnum
   elseif has_key(a:location, 'cmd')

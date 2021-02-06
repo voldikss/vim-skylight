@@ -14,15 +14,12 @@ Contents ~
    3. g:skylight_position                                 |g:skylight_position|
    4. g:skylight_borderchars                           |g:skylight_borderchars|
    5. g:skylight_jump_command                         |g:skylight_jump_command|
- 6. Functions                                              |skylight-functions|
-   1. skylight#float#has_scroll()                   |skylight#float#has_scroll|
-   2. skylight#float#scroll({forward}, [amount])        |skylight#float#scroll|
- 7. Keymaps                                                  |skylight-keymaps|
- 8. Highlights                                            |skylight-highlights|
- 9. Why                                                          |skylight-why|
- 10. Known issues                                       |skylight-known-issues|
- 11. Screenshots                                         |skylight-screenshots|
- 12. References                                           |skylight-references|
+ 6. Keymaps                                                  |skylight-keymaps|
+ 7. Highlights                                            |skylight-highlights|
+ 8. Why                                                          |skylight-why|
+ 9. Known issues                                       |skylight-known-issues|
+ 10. Screenshots                                         |skylight-screenshots|
+ 11. References                                           |skylight-references|
 
 ===============================================================================
                                                         *skylight-introduction*
@@ -77,10 +74,8 @@ Skylight~
 
 - In the drop-down menu, you can use:
   - `j` or `k` to move (and perform live previewing if the menu is opened by `: Skylight!`)
-  - `<CR>` for previewing or jumping to if the menu is opened by `: Skylight!`)
+  - `<CR>` for previewing or jumping to
   - `<Esc>` or `q` for closing
-  - `h` or `l` to close the menu quickly
-  - `j` or `k` will close the menu if there is only one entry
   - number keys(`1`, `2`, ...) to quickly jump to the corresponding entry
 
 This command can also be used with a range, e.g., visual select and `'<,'>:Skylight! file`.
@@ -137,18 +132,6 @@ Available: "'edit'", "'split'", "'vsplit'", "'tabe'", "'drop'".
 Default: "'edit'"
 
 ===============================================================================
-                                                           *skylight-functions*
-Functions ~
-
--------------------------------------------------------------------------------
-                                                    *skylight#float#has_scroll*
-skylight#float#has_scroll() ~
-
--------------------------------------------------------------------------------
-                                                        *skylight#float#scroll*
-skylight#float#scroll({forward}, [amount]) ~
-
-===============================================================================
                                                              *skylight-keymaps*
 Keymaps ~
     >
@@ -156,11 +139,9 @@ Keymaps ~
     nnoremap <silent>       gp    :Skylight!<CR>
     vnoremap <silent>       gp    :Skylight!<CR>
 <
-The following mappings can be used for scrolling floating widow.
-    >
-  nnoremap <silent><expr> <C-f> skylight#float#has_scroll() ? skylight#float#scroll(1)
-  nnoremap <silent><expr> <C-b> skylight#float#has_scroll() ? skylight#float#scroll(0)
-<
+In the skylight-menu window, use `<C-f>` to scroll forward and `<C-b>` to
+scroll backward.
+
 ===============================================================================
                                                           *skylight-highlights*
 Highlights ~

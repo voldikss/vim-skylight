@@ -2,7 +2,7 @@
 
 Search asynchronously and preview file/symbol/word under cursor in the floating window.
 
-![](https://user-images.githubusercontent.com/20282795/103437535-c2497780-4c63-11eb-8e21-82a9c23ec29b.png)
+![](https://user-images.githubusercontent.com/20282795/107115215-fc7ee800-68a5-11eb-88cf-b66bb2c64257.png)
 
 - [Installation](#installation)
 - [Commands](#commands)
@@ -51,10 +51,8 @@ Only works in NVIM >= 0.4.3
 
 - In the drop-down menu, you can use:
   - `j` or `k` to move (and perform live previewing if the menu is opened by `: Skylight!`)
-  - `<CR>` for previewing or jumping to if the menu is opened by `: Skylight!`)
+  - `<CR>` for previewing or jumping to
   - `<Esc>` or `q` for closing
-  - `h` or `l` to close the menu quickly
-  - `j` or `k` will close the menu if there is only one entry
   - number keys(`1`, `2`, ...) to quickly jump to the corresponding entry
 
 This command can also be used with a range, e.g., visual select and `'<,'>:Skylight! file`.
@@ -98,12 +96,6 @@ This command can also be used with a range, e.g., visual select and `'<,'>:Skyli
 
   Default: `'edit'`
 
-## Functions
-
-- `skylight#float#has_scroll()`
-
-- `skylight#float#scroll({forward}, [amount])`
-
 ## Keymaps
 
 ```vim
@@ -112,12 +104,8 @@ nnoremap <silent>       gp    :Skylight!<CR>
 vnoremap <silent>       gp    :Skylight!<CR>
 ```
 
-The following mappings can be used for scrolling floating widow.
-
-```vim
-nnoremap <silent><expr> <C-f> skylight#float#has_scroll() ? skylight#float#scroll(1) : "\<C-f>"
-nnoremap <silent><expr> <C-b> skylight#float#has_scroll() ? skylight#float#scroll(0) : "\<C-b>"
-```
+In the skylight-menu window, use `<C-f>` to scroll forward and `<C-b>` to
+scroll backward.
 
 ## Highlights
 
@@ -158,10 +146,10 @@ size files as it will cost more time for nvim to open that file.
 ## Demos
 
 - with live preview
-  ![](https://user-images.githubusercontent.com/20282795/103435742-47299680-4c4e-11eb-8428-a76a254a9935.gif)
+  ![](https://user-images.githubusercontent.com/20282795/107115209-f2f58000-68a5-11eb-9880-a260058e54cb.gif)
 
 - without live preview
-  ![](https://user-images.githubusercontent.com/20282795/103435744-498bf080-4c4e-11eb-8aad-c4ee58923dad.gif)
+  ![](https://user-images.githubusercontent.com/20282795/107115213-f6890700-68a5-11eb-91d8-7beecee2262c.gif)
 
 - quickfix
   ![](https://user-images.githubusercontent.com/20282795/103435745-4a248700-4c4e-11eb-943f-4aa78fb801f9.gif)
