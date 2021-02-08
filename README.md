@@ -54,6 +54,7 @@ Only works in NVIM >= 0.4.3
   - `<CR>` for previewing or jumping to
   - `<Esc>` or `q` for closing
   - number keys(`1`, `2`, ...) to quickly jump to the corresponding entry
+  - `<C-w>p` to jump to the skylight window and jump back
 
 This command can also be used with a range, e.g., visual select and `'<,'>:Skylight! file`.
 

@@ -210,17 +210,17 @@ function! s:start_prompt()
         continue
       else
         let mapped = get(s:char_map, ch, ch)
-        if mapped == '<esc>' || mapped == 'q'
+        if mapped == '<Esc>' || mapped == 'q'
           execute "normal \<Plug>(close)"
           return
-        elseif mapped == '<cr>' || mapped == 'l' || mapped == 'h'
+        elseif mapped == '<CR>' || mapped == 'l' || mapped == 'h'
           execute "normal \<Plug>(accept)"
           return
-        elseif mapped == 'j' || mapped == '<down>'
+        elseif mapped == 'j' || mapped == '<Down>'
           execute "normal \<Plug>(down)"
           doautocmd CursorMoved
           redraw
-        elseif mapped == 'k' || mapped == '<up>'
+        elseif mapped == 'k' || mapped == '<Up>'
           execute "normal \<Plug>(up)"
           doautocmd CursorMoved
           redraw
@@ -233,7 +233,7 @@ function! s:start_prompt()
             doautocmd CursorMoved
             redraw
           endif
-        elseif mapped == '<c-f>' || mapped == '<c-b>'
+        elseif mapped == '<C-f>' || mapped == '<C-b>'
           autocmd CursorMoved <buffer> ++once redraw | call s:start_prompt()
           if mapped == '<c-f>'
             call skylight#float#scroll(1, 3)
@@ -241,6 +241,13 @@ function! s:start_prompt()
             call skylight#float#scroll(0, 3)
           endif
           return
+        elseif mapped == '<C-w>'
+          autocmd CursorMoved <buffer> ++once redraw | call s:start_prompt()
+          let suffix = s:prompt_getc()
+          if suffix == 'p'
+            wincmd p
+            return
+          endif
         endif
       endif
     endwhile
@@ -249,6 +256,7 @@ function! s:start_prompt()
   endtry
 endfunction
 
+nmap <nowait><buffer><silent> <CR>   <Plug>(accept)
 nmap <nowait><buffer><silent> <Esc>  <Plug>(close)
 nmap <nowait><buffer><silent> <Up>   <Plug>(up)
 nmap <nowait><buffer><silent> <Down> <Plug>(down)
