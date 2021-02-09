@@ -95,80 +95,6 @@ endfunction
 
 " modified from coc/prompt.vim
 "=============================================================================
-let s:char_map = {
-      \ "\<Plug>": '<plug>',
-      \ "\<Esc>": '<esc>',
-      \ "\<Tab>": '<tab>',
-      \ "\<S-Tab>": '<s-tab>',
-      \ "\<bs>": '<bs>',
-      \ "\<right>": '<right>',
-      \ "\<left>": '<left>',
-      \ "\<up>": '<up>',
-      \ "\<down>": '<down>',
-      \ "\<home>": '<home>',
-      \ "\<end>": '<end>',
-      \ "\<cr>": '<cr>',
-      \ "\<PageUp>":'<PageUp>' ,
-      \ "\<PageDown>":'<PageDown>' ,
-      \ "\<FocusGained>":'<FocusGained>' ,
-      \ "\<ScrollWheelUp>": '<ScrollWheelUp>',
-      \ "\<ScrollWheelDown>": '<ScrollWheelDown>',
-      \ "\<LeftMouse>": '<LeftMouse>',
-      \ "\<LeftDrag>": '<LeftDrag>',
-      \ "\<LeftRelease>": '<LeftRelease>',
-      \ "\<2-LeftMouse>": '<2-LeftMouse>',
-      \ "\<C-a>": '<C-a>',
-      \ "\<C-b>": '<C-b>',
-      \ "\<C-c>": '<C-c>',
-      \ "\<C-d>": '<C-d>',
-      \ "\<C-e>": '<C-e>',
-      \ "\<C-f>": '<C-f>',
-      \ "\<C-g>": '<C-g>',
-      \ "\<C-h>": '<C-h>',
-      \ "\<C-j>": '<C-j>',
-      \ "\<C-k>": '<C-k>',
-      \ "\<C-l>": '<C-l>',
-      \ "\<C-n>": '<C-n>',
-      \ "\<C-o>": '<C-o>',
-      \ "\<C-p>": '<C-p>',
-      \ "\<C-q>": '<C-q>',
-      \ "\<C-r>": '<C-r>',
-      \ "\<C-s>": '<C-s>',
-      \ "\<C-t>": '<C-t>',
-      \ "\<C-u>": '<C-u>',
-      \ "\<C-v>": '<C-v>',
-      \ "\<C-w>": '<C-w>',
-      \ "\<C-x>": '<C-x>',
-      \ "\<C-y>": '<C-y>',
-      \ "\<C-z>": '<C-z>',
-      \ "\<A-a>": '<A-a>',
-      \ "\<A-b>": '<A-b>',
-      \ "\<A-c>": '<A-c>',
-      \ "\<A-d>": '<A-d>',
-      \ "\<A-e>": '<A-e>',
-      \ "\<A-f>": '<A-f>',
-      \ "\<A-g>": '<A-g>',
-      \ "\<A-h>": '<A-h>',
-      \ "\<A-i>": '<A-i>',
-      \ "\<A-j>": '<A-j>',
-      \ "\<A-k>": '<A-k>',
-      \ "\<A-l>": '<A-l>',
-      \ "\<A-m>": '<A-m>',
-      \ "\<A-n>": '<A-n>',
-      \ "\<A-o>": '<A-o>',
-      \ "\<A-p>": '<A-p>',
-      \ "\<A-q>": '<A-q>',
-      \ "\<A-r>": '<A-r>',
-      \ "\<A-s>": '<A-s>',
-      \ "\<A-t>": '<A-t>',
-      \ "\<A-u>": '<A-u>',
-      \ "\<A-v>": '<A-v>',
-      \ "\<A-w>": '<A-w>',
-      \ "\<A-x>": '<A-x>',
-      \ "\<A-y>": '<A-y>',
-      \ "\<A-z>": '<A-z>',
-      \ }
-
 function! s:prompt_getc() abort
   let c = getchar()
   return type(c) == type(0) ? nr2char(c) : c
@@ -179,7 +105,7 @@ function! s:prompt_getchar() abort
   if 1 != &iminsert
     return input
   endif
-  "a language keymap is activated, so input must be resolved to the mapped values.
+  "a language keymap is activated, so input must be resolved to the ch values.
   let partial_keymap = mapcheck(input, "l")
   while partial_keymap !=# ""
     let full_keymap = maparg(input, "l")
@@ -209,23 +135,22 @@ function! s:start_prompt()
       if ch ==# "\<FocusLost>" || ch ==# "\<FocusGained>" || ch ==# "\<CursorHold>"
         continue
       else
-        let mapped = get(s:char_map, ch, ch)
-        if mapped == '<Esc>' || mapped == 'q'
+        if ch == "\<Esc>" || ch == "q"
           execute "normal \<Plug>(close)"
           return
-        elseif mapped == '<CR>' || mapped == 'l' || mapped == 'h'
+        elseif ch == "\<CR>" || ch == "l" || ch == "h"
           execute "normal \<Plug>(accept)"
           return
-        elseif mapped == 'j' || mapped == '<Down>'
+        elseif ch == "j" || ch == "\<Down>"
           execute "normal \<Plug>(down)"
           doautocmd CursorMoved
           redraw
-        elseif mapped == 'k' || mapped == '<Up>'
+        elseif ch == "k" || ch == "\<Up>"
           execute "normal \<Plug>(up)"
           doautocmd CursorMoved
           redraw
-        elseif index(range(1, 10), str2nr(mapped)) > -1
-          execute mapped
+        elseif index(range(1, 10), str2nr(ch)) > -1
+          execute ch
           if !s:menu_live_preview
             execute "normal \<Plug>(accept)"
             return
@@ -233,18 +158,18 @@ function! s:start_prompt()
             doautocmd CursorMoved
             redraw
           endif
-        elseif mapped == '<C-f>' || mapped == '<C-b>'
+        elseif ch == "\<C-f>" || ch == "\<C-b>"
           autocmd CursorMoved <buffer> ++once redraw | call s:start_prompt()
-          if mapped == '<c-f>'
+          if ch == "\<C-f>"
             call skylight#float#scroll(1, 3)
-          elseif mapped == '<c-b>'
+          elseif ch == "\<C-b>"
             call skylight#float#scroll(0, 3)
           endif
           return
-        elseif mapped == '<C-w>'
+        elseif ch == "\<C-w>"
           autocmd CursorMoved <buffer> ++once redraw | call s:start_prompt()
           let suffix = s:prompt_getc()
-          if suffix == 'p'
+          if suffix == "p"
             wincmd p
             return
           endif
