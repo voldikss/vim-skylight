@@ -33,9 +33,9 @@ function! skylight#async#new() abort
       let cmd = a:cmd
     endif
     if a:async == 1
-      call self.notify('vim_command', cmd)
+      call self.notify('nvim_command', cmd)
     else
-      call self.request('vim_command', cmd)
+      call self.request('nvim_command', cmd)
     endif
   endfunction
 
