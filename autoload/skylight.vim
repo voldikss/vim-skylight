@@ -13,7 +13,7 @@ function! skylight#jumpto(location) abort
     let cmd = 'normal! gg0'
   endif
   silent! execute printf('%s %s | %s',
-    \ g:skylight_jump_command,
+    \ g:skylight_opener,
     \ a:location.filename,
     \ cmd
     \ )

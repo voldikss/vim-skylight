@@ -89,7 +89,7 @@ This command can also be used with a range, e.g., visual select and `'<,'>:Skyli
 
   Default: `['─', '│', '─', '│', '╭', '╮', '╯', '╰']`
 
-- **`g:skylight_jump_command`**
+- **`g:skylight_opener`**
 
   Type `String`. Command used for jumping to
 

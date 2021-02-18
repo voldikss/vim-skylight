@@ -12,7 +12,7 @@ let g:skylight_width        = get(g:, 'skylight_width', 0.5)
 let g:skylight_height       = get(g:, 'skylight_height', 0.5)
 let g:skylight_position     = get(g:, 'skylight_position', 'topright')
 let g:skylight_borderchars  = get(g:, 'skylight_borderchars', ['─', '│', '─', '│', '╭', '╮', '╯', '╰'])
-let g:skylight_jump_command = get(g:, 'skylight_jump_command', 'edit')
+let g:skylight_opener = get(g:, 'skylight_opener', 'edit')
 
 hi def link SkylightBorder Normal
 

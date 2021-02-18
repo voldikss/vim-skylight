@@ -13,7 +13,7 @@ Contents ~
    2. g:skylight_height                                     |g:skylight_height|
    3. g:skylight_position                                 |g:skylight_position|
    4. g:skylight_borderchars                           |g:skylight_borderchars|
-   5. g:skylight_jump_command                         |g:skylight_jump_command|
+   5. g:skylight_opener                         |g:skylight_opener|
  6. Keymaps                                                  |skylight-keymaps|
  7. Highlights                                            |skylight-highlights|
  8. Why                                                          |skylight-why|
@@ -123,8 +123,8 @@ Type |List| of |String|. Characters for the border.
 Default: "['─', '│', '─', '│', '╭', '╮', '╯', '╰']"
 
 -------------------------------------------------------------------------------
-                                                      *g:skylight_jump_command*
-g:skylight_jump_command ~
+                                                      *g:skylight_opener*
+g:skylight_opener ~
 
 Type |String|. Command used for jumping to
 
