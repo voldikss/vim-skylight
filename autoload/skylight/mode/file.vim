@@ -9,7 +9,7 @@ function! skylight#mode#file#search(pattern) abort
     return
   endif
 
-  let lnumpat = '\(:\|(\||\)\zs\d\+\ze'
+  let lnumpat = '\(:\|(\||\|\s\+\)\zs\d\+\ze'
   if !empty(a:pattern)
     let pattern = a:pattern
     let lnumstr = matchstr(pattern, lnumpat)
