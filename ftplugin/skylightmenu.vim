@@ -189,4 +189,4 @@ nmap <nowait><buffer><silent> q      <Plug>(close)
 nmap <nowait><buffer><silent> k      <Plug>(up)
 nmap <nowait><buffer><silent> j      <Plug>(down)
 
-call timer_start(100, {->s:start_prompt()})
+call timer_start(150, {->s:start_prompt()})
