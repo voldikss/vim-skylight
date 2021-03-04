@@ -137,6 +137,7 @@ function! s:start_prompt()
       else
         if ch == "\<Esc>" || ch == "q"
           execute "normal \<Plug>(close)"
+          stopinsert
           return
         elseif ch == "\<CR>" || ch == "l" || ch == "h"
           execute "normal \<Plug>(accept)"
